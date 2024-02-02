@@ -34,19 +34,8 @@ var loadFolder : String = ProjectSettings.globalize_path("res://JSON/")
 @onready var messageDialog : AcceptDialog = $CanvasLayer/UI/FileDialogHolder/MessageDialog
 
 func _ready():
-	for window in dialogHolder.get_children():
-		window.connect("visibility_change", self.onDialogVisibilityChange)
 	saveDialog.current_path = saveFolder
 	loadDialog.current_path = loadFolder
-
-func onDialogVisibilityChange() -> void:
-	if is_instance_valid(dialogHolder):
-		var isVisible : bool = false
-		for c in dialogHolder.get_children():
-			if c.visible:
-				isVisible = true
-				break
-		dialogHolder.visible = isVisible
 
 func openNewDialog() -> void:
 	newDialog.show()
@@ -95,7 +84,8 @@ func onExitConfirmed() -> void:
 
 ####################################################################################################
 
-var lastMousePosition : Vector2 = Vector2()
+var mouseGlobalPosition : Vector2 = Vector2()
+var mouseCamPosition : Vector2 = Vector2()
 
 var waitingForHold : bool = false
 const hoverMaxTime : float = 0.5	
@@ -126,7 +116,7 @@ func _input(event):
 				if event.pressed:
 					waitingForHold = true
 					hoverTimer = 0.0
-					hoverPosition = lastMousePosition
+					hoverPosition = mouseGlobalPosition
 					hoverTerritory = getOverlappingTerritory()
 					if not is_instance_valid(hoverTerritory):
 						boardNode.makeTerritory(get_global_mouse_position())
@@ -170,27 +160,29 @@ func resetCam() -> void:
 
 func setZoom(zoom : Vector2):
 	var maxX : float = 5.0
-	var minX : float = 0.02
+	var minX : float = 0.2
 	zoom.x = min(maxX, max(minX, zoom.x))
 	zoom.y = min(maxX, max(minX, zoom.y))
 	
-	var oldZoom : Vector2 = cam.zoom
-	cam.zoom = zoom
+	var viewportSize : Vector2 = get_viewport_rect().size
+	var oldMousePosition : Vector2 = (mouseCamPosition - viewportSize / 2.0) / cam.zoom
+	var newMousePosition : Vector2 = (mouseCamPosition - viewportSize / 2.0) / zoom
+	var dp : Vector2 = oldMousePosition - newMousePosition
 	
-	var oldMousePosition : Vector2 = (lastMousePosition - cam.position) * oldZoom
-	var newMousePosition : Vector2 = (lastMousePosition - cam.position) * zoom
-	cam.position += newMousePosition - oldMousePosition
+	cam.zoom = zoom
+	cam.position += dp
 
 func _process(delta):
-	var mpLastFrame : Vector2 = lastMousePosition
-	lastMousePosition = get_global_mouse_position()
+	var mpLastFrame : Vector2 = mouseGlobalPosition
+	mouseGlobalPosition = get_global_mouse_position()
+	mouseCamPosition = get_viewport().get_mouse_position()
 	if movingCam:
-		var dp : Vector2 = mpLastFrame - lastMousePosition
+		var dp : Vector2 = mpLastFrame - mouseGlobalPosition
 		cam.position += dp
-		lastMousePosition += dp
+		mouseGlobalPosition += dp
 	
 	if waitingForHold:
-		if (lastMousePosition - hoverPosition).length() >= hoverMaxDist:
+		if (mouseGlobalPosition - hoverPosition).length() >= hoverMaxDist:
 			waitingForHold = false
 		else:
 			hoverTimer += delta
@@ -199,12 +191,12 @@ func _process(delta):
 				pathHighlight.hide()
 				endHover()
 	elif is_instance_valid(holdTerritory):
-		if holdTerritory.position != lastMousePosition:
-			boardNode.moveTerritory(holdTerritory, lastMousePosition)
+		if holdTerritory.position != mouseGlobalPosition:
+			boardNode.moveTerritory(holdTerritory, mouseGlobalPosition)
 	
 	if pathHighlight.visible:
 		pathHighlight.points[0] = hoverTerritory.position
-		pathHighlight.points[1] = lastMousePosition
+		pathHighlight.points[1] = mouseGlobalPosition
 	
 	if rmbHeld:
 		var ov = getOverlappingTerritory()
@@ -229,10 +221,10 @@ func _process(delta):
 		cam.rotation += camRotSpeed * delta
 
 func getOverlappingTerritory() -> TerritoryNode:
-	return boardNode.getOverlappingTerritory(lastMousePosition)
+	return boardNode.getOverlappingTerritory(mouseGlobalPosition)
 
 func getOverlapplingPath() -> Line2D:
-	return boardNode.getOverlappingPath(lastMousePosition)
+	return boardNode.getOverlappingPath(mouseGlobalPosition)
 
 func connectHoverTerritory() -> void:
 	if is_instance_valid(hoverTerritory):
