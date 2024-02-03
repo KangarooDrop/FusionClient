@@ -27,6 +27,10 @@ offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Multiplayer"
+
 [node name="BoardEditorButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Board Editor"
@@ -40,6 +44,7 @@ layout_mode = 2
 text = "Exit
 "
 
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="onMultiplayerPressed"]
 [connection signal="pressed" from="VBoxContainer/BoardEditorButton" to="." method="onBoardEditorPressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="onSettingsPressed"]
 [connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="onExitPressed"]

@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 Util="*res://Scripts/Util/Util.gd"
 Preloader="*res://Scripts/Util/Preloader.gd"
+LoadingScreen="*res://Scenes/UI/LoadingScreen.tscn"
+MatchMakerClient="*res://Scripts/Multiplayer/MatchMakerClient.gd"
 
 [rendering]
 
