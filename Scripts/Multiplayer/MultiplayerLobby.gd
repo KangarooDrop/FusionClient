@@ -21,8 +21,11 @@ const lobbyPlayerLabelPacked : PackedScene = preload("res://Scenes/Multiplayer/L
 @onready var roomKeyEdit : LineEdit = $ButtonsPanel/ButtonHolder/RoomKeyEdit
 @onready var numPlayersEdit : LineEdit = $ButtonsPanel/ButtonHolder/NumPlayersEdit
 
+@onready var chatHolder : Control = $ChatPanel/ChatHolder
 @onready var chatVBox : VBoxContainer = $ChatPanel/ChatHolder/ChatVBox
 @onready var sendEdit : LineEdit = $ChatPanel/SendHolder/SendEdit
+
+@onready var acceptDialog : AcceptDialog = $AcceptDialog
 
 const debug : bool = false
 
@@ -34,6 +37,13 @@ const  pingMaxTime : float = 1.0
 var pingTimer : float = pingMaxTime
 
 ####################################################################################################
+
+func showDialog(title : String, text : String, okButtonText : String = "OK"):
+	acceptDialog.title = title
+	acceptDialog.dialog_text = text
+	acceptDialog.ok_button_text = okButtonText
+	acceptDialog.size.x = 100
+	acceptDialog.show()
 
 func updateButtons() -> void:
 	startButton.disabled = not allReady and not debug
@@ -97,11 +107,15 @@ func onServerSuccess(successMessage : String) -> void:
 		setInLobby(true)
 		setIsHost(true)
 		isHost = true
+		clearChat()
 	elif type == MatchMakerClient.CLIENT_SUCC_JOIN_LOBBY:
 		setInLobby(true)
+		clearChat()
+	elif type == MatchMakerClient.CLIENT_SUCC_START_GAME:
+		LoadingScreen.show()
 
 func onServerInfo(infoMessage : String) -> void:
-	var split : Array = infoMessage.split(MatchMakerClient.DEL_HANDLER)
+	var split : Array = infoMessage.split(MatchMakerClient.DEL_HANDLER, true, 1)
 	var type : String = split[0]
 	if type == MatchMakerClient.CLIENT_INFO_PLAYERS:
 		allReady = true
@@ -116,6 +130,14 @@ func onServerInfo(infoMessage : String) -> void:
 				allReady = false
 			updateButtons()
 		setPlayerDisplay(parsed)
+	elif type == MatchMakerClient.CLIENT_INFO_SET_HOST:
+		showDialog("Host Disconnected", "You are now the host of the lobby")
+	elif type == MatchMakerClient.CLIENT_INFO_CHAT:
+		var chatLabel : Label = Label.new()
+		chatVBox.add_child(chatLabel)
+		chatLabel.text = split[1]
+		await get_tree().process_frame
+		chatVBox.position.y = chatHolder.size.y - chatVBox.size.y
 
 func onServerError(errorMessage : String) -> void:
 	var split : Array = errorMessage.split(MatchMakerClient.DEL_HANDLER)
@@ -124,6 +146,43 @@ func onServerError(errorMessage : String) -> void:
 		if inLobby:
 			setInLobby(false)
 			setIsHost(false)
+	
+	match type:
+		MatchMakerClient.CLIENT_ERR_USER_IN_LOBBY:
+			showDialog("Error", "You are already in a lobby (wait a moment and retry)")
+		MatchMakerClient.CLIENT_ERR_LOBBY_NAME_TAKEN:
+			showDialog("Error", "That name is already in use")
+		MatchMakerClient.CLIENT_ERR_LOBBY_TIMEOUT:
+			showDialog("Error", "The lobby timed out")
+		MatchMakerClient.CLIENT_ERR_USERNAME_TAKEN:
+			showDialog("Error", "That username is already in use by someone in the lobby")
+		MatchMakerClient.CLIENT_ERR_LOBBY_BAD_SIZE:
+			showDialog("Error", "Too many players (max of 8)")
+		MatchMakerClient.CLIENT_ERR_NOT_HOST:
+			showDialog("Error", "You are not the host of the lobby")
+		MatchMakerClient.CLIENT_ERR_NOT_IN_LOBBY:
+			showDialog("Error", "You are not in a lobby")
+		MatchMakerClient.CLIENT_ERR_USERS_NOT_READY:
+			showDialog("Error", "Some users are not ready")
+		MatchMakerClient.CLIENT_ERR_NO_LOBBY_FOUND:
+			showDialog("Error", "Could not find the provided lobby")
+		MatchMakerClient.CLIENT_ERR_COULD_NOT_JOIN:
+			showDialog("Error", "Could not join the lobby")
+		MatchMakerClient.CLIENT_ERR_NO_USER_FOUND:
+			showDialog("Error", "Could not find the provided user")
+		MatchMakerClient.CLIENT_ERR_KICKED:
+			showDialog("Kicked", "You have been kicked from the lobby")
+		MatchMakerClient.CLIENT_ERR_BANNED:
+			showDialog("Banned", "You have been banned from the lobby")
+		
+		MatchMakerClient.CLIENT_ERR_INVALID_REQUEST:
+			showDialog("Error", "Invalid request received")
+		MatchMakerClient.CLIENT_ERR_BAD_START_GAME:
+			showDialog("Error", "Could not start the game. Please try again")
+		MatchMakerClient.CLIENT_ERR_USERNAME_BAD:
+			showDialog("Error", "Invalid username")
+		MatchMakerClient.CLIENT_ERR_BAD_CHAT:
+			showDialog("Error", "Invalid chat message")
 
 func _process(delta):
 	if inLobby:
@@ -134,6 +193,11 @@ func _process(delta):
 
 ####################################################################################################
 
+func clearChat() -> void:
+	for c in chatVBox.get_children():
+		c.free()
+	chatVBox.size.y = 0.0
+	
 func setPlayerDisplay(playerData : Array) -> void:
 	var numLabels : int = playerVBox.get_child_count()
 	if numLabels > playerData.size():
@@ -192,7 +256,7 @@ func onPublicLobbiesPressed() -> void:
 
 
 
-func onSendMessagePressed() -> void:
-	var text : String = sendEdit.get_text()
+func onSendMessagePressed(text : String = "") -> void:
+	text = sendEdit.get_text()
 	sendEdit.set_text("")
 	MatchMakerClient.sendChat(text)
