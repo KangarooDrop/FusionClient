@@ -2,5 +2,296 @@
 
 [ext_resource type="Script" path="res://Scripts/Multiplayer/MultiplayerLobby.gd" id="1_t2sdc"]
 
-[node name="MultiplayerLobby" type="Node2D"]
+[node name="MultiplayerLobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_t2sdc")
+
+[node name="PlayersPanel" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 364.0
+offset_bottom = -64.0
+grow_vertical = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="StartButton" type="Button" parent="PlayersPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 39.0
+grow_horizontal = 2
+text = "Start Game"
+
+[node name="ReadyButton" type="Button" parent="PlayersPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 112.0
+offset_bottom = 39.0
+grow_horizontal = 2
+text = "Ready"
+
+[node name="PlayersHolder" type="ColorRect" parent="PlayersPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 48.0
+offset_right = -8.0
+offset_bottom = -103.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="PlayerLabelHolder" type="ColorRect" parent="PlayersPanel/PlayersHolder"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 32.0
+grow_horizontal = 2
+color = Color(0.211765, 0.211765, 0.211765, 1)
+
+[node name="Label" type="Label" parent="PlayersPanel/PlayersHolder/PlayerLabelHolder"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Players:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlayerVBox" type="VBoxContainer" parent="PlayersPanel/PlayersHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 40.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ExitLobbyButton" type="Button" parent="PlayersPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -48.0
+offset_top = 433.0
+offset_right = 48.0
+offset_bottom = 464.0
+grow_horizontal = 2
+text = "Exit Lobby"
+
+[node name="MainMenuButton" type="Button" parent="PlayersPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -48.0
+offset_top = 472.0
+offset_right = 48.0
+offset_bottom = 503.0
+grow_horizontal = 2
+text = "Main Menu"
+
+[node name="ButtonsPanel" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 380.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = 184.0
+grow_horizontal = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ButtonHolder" type="ColorRect" parent="ButtonsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="UsernameLabel" type="Label" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 97.0
+offset_bottom = 31.0
+text = "Username: "
+
+[node name="RoomKeyLabel" type="Label" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 1
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 97.0
+offset_bottom = 63.0
+text = "Room Key: "
+
+[node name="NumPlayersLabel" type="Label" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 72.0
+offset_right = 97.0
+offset_bottom = 95.0
+text = "Number of Players: "
+
+[node name="UsernameEdit" type="LineEdit" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 1
+offset_left = 98.0
+offset_top = 4.0
+offset_right = 258.0
+offset_bottom = 35.0
+
+[node name="RoomKeyEdit" type="LineEdit" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 98.0
+offset_top = 36.0
+offset_right = 258.0
+offset_bottom = 67.0
+
+[node name="NumPlayersEdit" type="LineEdit" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 162.0
+offset_top = 68.0
+offset_right = 258.0
+offset_bottom = 99.0
+
+[node name="HostButton" type="Button" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 4.0
+offset_right = 416.0
+offset_bottom = 35.0
+text = "Host Lobby"
+
+[node name="JoinButton" type="Button" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 36.0
+offset_right = 416.0
+offset_bottom = 67.0
+text = "Join Lobby"
+
+[node name="PublicLobbiesButton" type="Button" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 0
+offset_left = 288.0
+offset_top = 68.0
+offset_right = 416.0
+offset_bottom = 99.0
+text = "Public Lobbies"
+
+[node name="ColorDivider" type="ColorRect" parent="ButtonsPanel/ButtonHolder"]
+layout_mode = 1
+offset_left = 424.0
+offset_right = 432.0
+offset_bottom = 104.0
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ChatPanel" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 200.0
+offset_right = 1088.0
+offset_bottom = 584.0
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ChatHolder" type="ColorRect" parent="ChatPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -64.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="ChatVBox" type="VBoxContainer" parent="ChatPanel/ChatHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SendHolder" type="ColorRect" parent="ChatPanel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -56.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="SendButton" type="Button" parent="ChatPanel/SendHolder"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -15.5
+offset_right = 126.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "Send Message"
+
+[node name="SendEdit" type="LineEdit" parent="ChatPanel/SendHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 144.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="PlayersPanel/StartButton" to="." method="onStartGamePressed"]
+[connection signal="pressed" from="PlayersPanel/ReadyButton" to="." method="onReadyPressed"]
+[connection signal="pressed" from="PlayersPanel/ExitLobbyButton" to="." method="onExitLobbyPressed"]
+[connection signal="pressed" from="PlayersPanel/MainMenuButton" to="." method="onMainMenuPressed"]
+[connection signal="pressed" from="ButtonsPanel/ButtonHolder/HostButton" to="." method="onHostLobbyPressed"]
+[connection signal="pressed" from="ButtonsPanel/ButtonHolder/JoinButton" to="." method="onJoinLobbyPressed"]
+[connection signal="pressed" from="ButtonsPanel/ButtonHolder/PublicLobbiesButton" to="." method="onPublicLobbiesPressed"]
+[connection signal="pressed" from="ChatPanel/SendHolder/SendButton" to="." method="onSendMessagePressed"]

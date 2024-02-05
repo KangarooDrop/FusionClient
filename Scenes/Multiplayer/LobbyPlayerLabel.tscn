@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdw00s7fub26w"]
+
+[ext_resource type="Script" path="res://Scripts/Multiplayer/LobbyPlayerLabel.gd" id="1_d3op1"]
+
+[node name="LobbyPlayerLabel" type="Label"]
+offset_right = 200.0
+offset_bottom = 23.0
+text = "POOPY!"
+script = ExtResource("1_d3op1")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "[   ]"
+
+[node name="KickButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -69.0
+offset_top = -15.5
+offset_right = -50.0
+offset_bottom = 15.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "K"
+
+[node name="BanButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -99.0
+offset_top = -15.5
+offset_right = -80.0
+offset_bottom = 15.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "B"
+
+[connection signal="pressed" from="KickButton" to="." method="onKickPressed"]
+[connection signal="pressed" from="BanButton" to="." method="onBanPressed"]
