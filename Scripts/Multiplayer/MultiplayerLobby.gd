@@ -35,6 +35,7 @@ var inLobby : bool = false
 var allReady : bool = false
 const  pingMaxTime : float = 1.0
 var pingTimer : float = pingMaxTime
+var waitingForServer : bool = false
 
 ####################################################################################################
 
@@ -46,20 +47,20 @@ func showDialog(title : String, text : String, okButtonText : String = "OK"):
 	acceptDialog.show()
 
 func updateButtons() -> void:
-	startButton.disabled = not allReady and not debug
-	readyButton.disabled = not inLobby and not debug
+	startButton.disabled = (not allReady or waitingForServer) and not debug
+	readyButton.disabled = (not inLobby or waitingForServer) and not debug
 	readyButton.set_text("Ready" if self.isReady else "Not Ready")
-	exitLobbyButton.disabled = not inLobby and not debug
+	exitLobbyButton.disabled = (not inLobby or waitingForServer) and not debug
 	mainMenuButton.disabled = not exitLobbyButton.disabled and not debug
 	
-	hostButton.disabled = inLobby and not debug
-	joinButton.disabled = hostButton.disabled and not debug
-	publicButton.disabled = hostButton.disabled and not debug
-	usernameEdit.editable = not hostButton.disabled and not debug
-	roomKeyEdit.editable = not hostButton.disabled and not debug
-	numPlayersEdit.editable = not hostButton.disabled and not debug
+	hostButton.disabled = (inLobby or waitingForServer) and not debug
+	joinButton.disabled = (hostButton.disabled or waitingForServer) and not debug
+	publicButton.disabled = (hostButton.disabled or waitingForServer) and not debug
+	usernameEdit.editable = (not hostButton.disabled or waitingForServer) and not debug
+	roomKeyEdit.editable = (not hostButton.disabled or waitingForServer) and not debug
+	numPlayersEdit.editable = (not hostButton.disabled or waitingForServer) and not debug
 	
-	sendButton.disabled = not hostButton.disabled and not debug
+	sendButton.disabled = (not hostButton.disabled or waitingForServer) and not debug
 
 func setInLobby(val : bool) -> void:
 	if val != self.inLobby:
@@ -72,17 +73,24 @@ func setInLobby(val : bool) -> void:
 
 func setIsHost(val : bool) -> void:
 	self.isHost = val
-	if val:
-		for playerLabel in playerVBox.get_children():
-			playerLabel.showOptions()
-	else:
-		for playerLabel in playerVBox.get_children():
-			playerLabel.hideOptions()
+	for playerLabel in playerVBox.get_children():
+		setPlayerLabelOptions(playerLabel)
 	updateButtons()
+
+func setPlayerLabelOptions(playerLabel) -> void:
+	if isHost:
+		playerLabel.showOptions()
+	else:
+		playerLabel.hideOptions()
 
 func setIsReady(val : bool) -> void:
 	self.isReady = val
 	updateButtons()
+
+func setWaitingForServer(val : bool) -> void:
+	if waitingForServer != val:
+		waitingForServer = val
+		updateButtons()
 
 ####################################################################################################
 
@@ -112,7 +120,10 @@ func onServerSuccess(successMessage : String) -> void:
 		setInLobby(true)
 		clearChat()
 	elif type == MatchMakerClient.CLIENT_SUCC_START_GAME:
-		LoadingScreen.show()
+		MatchMakerClient.lastActivePort = int(split[1])
+		get_tree().change_scene_to_packed(Preloader.main)
+	
+	setWaitingForServer(false)
 
 func onServerInfo(infoMessage : String) -> void:
 	var split : Array = infoMessage.split(MatchMakerClient.DEL_HANDLER, true, 1)
@@ -132,17 +143,20 @@ func onServerInfo(infoMessage : String) -> void:
 		setPlayerDisplay(parsed)
 	elif type == MatchMakerClient.CLIENT_INFO_SET_HOST:
 		showDialog("Host Disconnected", "You are now the host of the lobby")
+		setIsHost(true)
 	elif type == MatchMakerClient.CLIENT_INFO_CHAT:
 		var chatLabel : Label = Label.new()
 		chatVBox.add_child(chatLabel)
 		chatLabel.text = split[1]
 		await get_tree().process_frame
 		chatVBox.position.y = chatHolder.size.y - chatVBox.size.y
+	
+	setWaitingForServer(false)
 
 func onServerError(errorMessage : String) -> void:
 	var split : Array = errorMessage.split(MatchMakerClient.DEL_HANDLER)
 	var type : String = split[0]
-	if type == MatchMakerClient.CLIENT_ERR_LOBBY_TIMEOUT or type == MatchMakerClient.CLIENT_ERR_KICKED or type == MatchMakerClient.CLIENT_ERR_BANNED:
+	if type == MatchMakerClient.CLIENT_ERR_LOBBY_TIMEOUT or type == MatchMakerClient.CLIENT_ERR_KICKED or type == MatchMakerClient.CLIENT_ERR_BANNED or type == MatchMakerClient.CLIENT_ERR_SERVER_TIMEOUT:
 		if inLobby:
 			setInLobby(false)
 			setIsHost(false)
@@ -183,6 +197,11 @@ func onServerError(errorMessage : String) -> void:
 			showDialog("Error", "Invalid username")
 		MatchMakerClient.CLIENT_ERR_BAD_CHAT:
 			showDialog("Error", "Invalid chat message")
+		
+		MatchMakerClient.CLIENT_ERR_SERVER_TIMEOUT:
+			showDialog("Error", "Server timeout. Please contact your nearest Kevin")
+	
+	setWaitingForServer(false)
 
 func _process(delta):
 	if inLobby:
@@ -209,6 +228,7 @@ func setPlayerDisplay(playerData : Array) -> void:
 			playerVBox.add_child(lobbyPlayerLabel)
 			lobbyPlayerLabel.connect("onKick", self.onKick)
 			lobbyPlayerLabel.connect("onBan", self.onBan)
+			setPlayerLabelOptions(lobbyPlayerLabel)
 	
 	for i in range(playerData.size()):
 		var lobbyPlayerLabel = playerVBox.get_child(i)
@@ -244,14 +264,17 @@ func onHostLobbyPressed() -> void:
 	var username : String = usernameEdit.get_text()
 	var roomKey : String = roomKeyEdit.get_text()
 	var numPlayers : String = numPlayersEdit.get_text()
+	setWaitingForServer(true)
 	MatchMakerClient.hostLobby(roomKey, int(numPlayers), username)
 
 func onJoinLobbyPressed() -> void:
 	var username : String = usernameEdit.get_text()
 	var roomKey : String = roomKeyEdit.get_text()
+	setWaitingForServer(true)
 	MatchMakerClient.joinLobby(roomKey, username)
 
 func onPublicLobbiesPressed() -> void:
+	setWaitingForServer(true)
 	MatchMakerClient.getPublicLobbies()
 
 

@@ -1,6 +1,6 @@
 extends Node
 
-const address : String = "127.0.0.1"
+const ip : String = "127.0.0.1"
 const port : int = 25565
 
 ####################################################################################################
@@ -72,6 +72,8 @@ const CLIENT_ERR_NO_USER_FOUND = CLIENT_TYPE_ERR + DEL_MESSAGE +      'user_not_
 const CLIENT_ERR_KICKED = CLIENT_TYPE_ERR + DEL_MESSAGE +             'kicked'
 const CLIENT_ERR_BANNED = CLIENT_TYPE_ERR + DEL_MESSAGE +             'banned'
 
+const CLIENT_ERR_SERVER_TIMEOUT = CLIENT_TYPE_ERR + DEL_MESSAGE +     'server_timeout'
+
 const CLIENT_ERRORS : Array = [CLIENT_ERR_INVALID_REQUEST, CLIENT_ERR_USER_IN_LOBBY, CLIENT_ERR_USER_EXISTS, 
 		CLIENT_ERR_LOBBY_NAME_TAKEN, CLIENT_ERR_LOBBY_TIMEOUT, CLIENT_ERR_USERNAME_TAKEN, CLIENT_ERR_USERNAME_BAD, 
 		CLIENT_ERR_LOBBY_BAD_SIZE, CLIENT_ERR_BAD_CHAT, CLIENT_ERR_NOT_HOST, CLIENT_ERR_NOT_IN_LOBBY,
@@ -81,20 +83,25 @@ const CLIENT_ERRORS : Array = [CLIENT_ERR_INVALID_REQUEST, CLIENT_ERR_USER_IN_LO
 ####################################################################################################
 
 var server : PacketPeerUDP
+var lastActivePort : int = -1
 
 signal onServerSuccess(successMessage : String)
 signal onServerInfo(infoMessage : String)
 signal onServerError(errorMessage : String)
 
+const timeoutServerMax : float = 5.0
+var timeoutServer : float = 0.0
+
 const printTraffic : bool = false
 
 func _ready():
 	server = PacketPeerUDP.new()
-	server.set_dest_address(address, port)
+	server.set_dest_address(ip, port)
 
-func _process(_delta):
+func _process(delta):
 	var packet = getPacket()
 	if packet != null:
+		timeoutServer = timeoutServerMax
 		var packetString : String = packet.get_string_from_utf8()
 		if printTraffic:
 			print("Received packet: " + packetString)
@@ -104,6 +111,11 @@ func _process(_delta):
 			emit_signal("onServerInfo", packetString)
 		elif packetString.begins_with(CLIENT_TYPE_ERR):
 			emit_signal("onServerError", packetString)
+	
+	if timeoutServer > 0:
+		timeoutServer -= delta
+		if timeoutServer <= 0.0:
+			emit_signal("onServerError", CLIENT_ERR_SERVER_TIMEOUT)
 
 func closeServer() -> void:
 	if server != null:
@@ -119,12 +131,15 @@ func getPacket():
 
 
 func hostLobby(lobbyName : String, numUsers : int, username : String) -> void:
+	timeoutServer = timeoutServerMax
 	send_message(KEY_HOST_LOBBY + DEL_HANDLER + DEL_MESSAGE.join(PackedStringArray([lobbyName, str(numUsers), username])))
 
 func joinLobby(lobbyName : String, username : String) -> void:
+	timeoutServer = timeoutServerMax
 	send_message(KEY_JOIN_LOBBY + DEL_HANDLER + DEL_MESSAGE.join(PackedStringArray([lobbyName, username])))
 
 func getPublicLobbies() -> void:
+	timeoutServer = timeoutServerMax
 	send_message(KEY_PUBLIC_QUERY + DEL_HANDLER)
 
 

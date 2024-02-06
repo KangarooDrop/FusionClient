@@ -1,11 +1,14 @@
 extends Node
 
+var peer : ENetMultiplayerPeer = null
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	print("Connecting to game @ " + MatchMakerClient.ip + ":" + str(MatchMakerClient.lastActivePort))
+	
+	peer = ENetMultiplayerPeer.new()
+	peer.connect("peer_connected", self.onPeerConnected)
+	peer.create_client(MatchMakerClient.ip, MatchMakerClient.lastActivePort)
+	multiplayer.multiplayer_peer = peer
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func onPeerConnected(id : int):
+	print(id)
