@@ -83,7 +83,6 @@ const CLIENT_ERRORS : Array = [CLIENT_ERR_INVALID_REQUEST, CLIENT_ERR_USER_IN_LO
 ####################################################################################################
 
 var server : PacketPeerUDP
-var lastActivePort : int = -1
 
 signal onServerSuccess(successMessage : String)
 signal onServerInfo(infoMessage : String)
@@ -164,39 +163,6 @@ func sendPing() -> void:
 
 func onExit() -> void:
 	send_message(KEY_EXIT + DEL_HANDLER)
-
-
-func send_test():
-	pass
-	"""
-	var lobbyName : String = "Poopy"
-	var playerName0 : String = "Kevin"
-	var playerName1 : String = "Aaron"
-	var playerName2 : String = "Cam"
-	var numPlayers : int = 8
-	var chatMessage : String = "Nerd doodles"
-	
-	#send_message(KEY_HOST_LOBBY + DEL_HANDLER + DEL_MESSAGE.join(PackedStringArray([lobbyName, str(numPlayers), playerName0])))
-	#	-> "H|Poopy,8,Kevin"
-	#send_message(KEY_JOIN_LOBBY + DEL_HANDLER + DEL_MESSAGE.join(PackedStringArray([lobbyName, playerName1])))
-	#	-> "J|Poopy,Aaron"
-	#send_message(KEY_PUBLIC_QUERY + DEL_HANDLER)
-	#	-> "Q|"
-	#send_message(KEY_READY + DEL_HANDLER + str(1 if val else 0)
-	#	-> "R|0"
-	#send_message(KEY_CHAT_MESSAGE + DEL_HANDLER + chatMessage)
-	#	-> "C|Nerd doodles"
-	#send_message(KEY_START + DEL_HANDLER)
-	#	-> "S|"
-	#send_message(KEY_KICK + DEL_HANDLER + playerName1)
-	#	-> "K|Aaron"
-	#send_message(KEY_BAN + DEL_HANDLER + playerName2)
-	#	-> "B|Cam"
-	#send_message(KEY_PING + DEL_HANDLER)
-	#	-> "P|"
-	#send_message(KEY_EXIT + DEL_HANDLER)
-	#	-> "X|"
-	"""
 
 func send_message(message: String) -> void:
 	if printTraffic:

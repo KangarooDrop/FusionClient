@@ -120,8 +120,15 @@ func onServerSuccess(successMessage : String) -> void:
 		setInLobby(true)
 		clearChat()
 	elif type == MatchMakerClient.CLIENT_SUCC_START_GAME:
-		MatchMakerClient.lastActivePort = int(split[1])
-		get_tree().change_scene_to_packed(Preloader.main)
+		var main = Preloader.main.instantiate()
+		var tree = get_tree()
+		var node = tree.get_current_scene()
+		var nodeParent = node.get_parent()
+		nodeParent.remove_child(node)
+		node.queue_free()
+		nodeParent.add_child(main)
+		tree.current_scene = main
+		main.connectToServer(int(split[1]))
 	
 	setWaitingForServer(false)
 

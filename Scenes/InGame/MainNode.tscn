@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckutom7bvbjj0"]
-
-[ext_resource type="Script" path="res://Scripts/InGame/MainNode.gd" id="1_t1p8t"]
-[ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNode.tscn" id="2_2hlru"]
-
-[node name="Main" type="Node2D"]
-script = ExtResource("1_t1p8t")
-
-[node name="BoardNode" parent="." instance=ExtResource("2_2hlru")]

@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckutom7bvbjj0"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/Main.gd" id="1_0cbnh"]
+[ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNode.tscn" id="2_ddyov"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_0cbnh")
+
+[node name="BoardNode" parent="." instance=ExtResource("2_ddyov")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 45.0
+offset_bottom = 23.0
+text = "Client"
+
+[node name="ConcedeButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -107.0
+offset_top = -111.0
+offset_right = -32.0
+offset_bottom = -80.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Concede"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -107.0
+offset_top = -63.0
+offset_right = -32.0
+offset_bottom = -32.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Quit"
+
+[connection signal="pressed" from="CanvasLayer/ConcedeButton" to="." method="onConcedePressed"]
+[connection signal="pressed" from="CanvasLayer/QuitButton" to="." method="onQuitPressed"]
