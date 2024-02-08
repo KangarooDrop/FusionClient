@@ -120,15 +120,7 @@ func onServerSuccess(successMessage : String) -> void:
 		setInLobby(true)
 		clearChat()
 	elif type == MatchMakerClient.CLIENT_SUCC_START_GAME:
-		var main = Preloader.main.instantiate()
-		var tree = get_tree()
-		var node = tree.get_current_scene()
-		var nodeParent = node.get_parent()
-		nodeParent.remove_child(node)
-		node.queue_free()
-		nodeParent.add_child(main)
-		tree.current_scene = main
-		main.connectToServer(int(split[1]))
+		Main.swapAndConnect(int(split[1]))
 	
 	setWaitingForServer(false)
 
@@ -142,9 +134,9 @@ func onServerInfo(infoMessage : String) -> void:
 		for pd in playersData:
 			var playerSplit : Array = pd.split(MatchMakerClient.DEL_SUB)
 			var username : String = playerSplit[0]
-			var isReady : bool = playerSplit[1] == "1"
-			parsed.append([username, isReady])
-			if not isReady:
+			var userReady : bool = playerSplit[1] == "1"
+			parsed.append([username, userReady])
+			if not userReady:
 				allReady = false
 			updateButtons()
 		setPlayerDisplay(parsed)
