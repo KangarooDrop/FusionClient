@@ -1,0 +1,8 @@
+name,art_file,power,toughness,elements,abilities
+NULL,_null_art.png,1,1,NULL,
+FIRE,_fire_art.png,5,1,FIRE,
+WATER,_water_art.png,2,4,WATER,
+ROCK,_rock_art.png,0,6,ROCK,
+NATURE,_nature_art.png,4,2,NATURE,
+DEATH,_death_art.png,6,0,DEATH,
+TECH,_tech_art.png,3,3,TECH,

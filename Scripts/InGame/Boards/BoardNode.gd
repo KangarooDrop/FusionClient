@@ -5,6 +5,7 @@ class_name BoardNode
 @onready var territyHolder : Node2D = $TerritoryHolder
 @onready var pathHolder : Node2D = $PathHolder
 
+var boardName : String = "_NO_NAME"
 var pathData : Dictionary = {}
 var pathNodes : Dictionary = {}
 
@@ -190,11 +191,14 @@ func getRect() -> Rect2:
 			maxY = terr.position.y
 	
 	return Rect2(minX, minY, maxX - minX, maxY - minY)
-		
+
+func getBoardName() -> String:
+	return boardName
 
 const BOARD_VERSION : String = "0.01"
 func getSaveData() -> Dictionary:
 	var data : Dictionary = {"ver":BOARD_VERSION, "terrs":[], "conns":[]}
+	data["name"] = getBoardName()
 	var territories : Array = getAllTerritories() 
 	for terr in getAllTerritories():
 		data["terrs"].append(terr.getSaveData())
@@ -242,13 +246,15 @@ func loadSaveData(data : Dictionary) -> LOAD_ERROR:
 	
 	if data.is_empty():
 		return LOAD_ERROR.CORRUPTED
-	if not data.has("ver") or not data.has("terrs") or not data.has("conns"):
+	if not data.has("name") or not data.has("ver") or not data.has("terrs") or not data.has("conns"):
 		return LOAD_ERROR.MISSING_KEY
 	if data["ver"] != BOARD_VERSION:
 		return LOAD_ERROR.WRONG_VERSION
 	
-	if typeof(data["terrs"]) != TYPE_ARRAY or typeof(data["conns"]) != TYPE_ARRAY:
+	if typeof(data["terrs"]) != TYPE_ARRAY or typeof(data["conns"]) != TYPE_ARRAY or typeof(data["name"]) != TYPE_STRING or typeof(data["ver"]) != TYPE_STRING:
 		return LOAD_ERROR.BAD_TYPE
+	
+	boardName = data["name"]
 	
 	for territorySaveData in data["terrs"]:
 		if typeof(territorySaveData) != TYPE_DICTIONARY:

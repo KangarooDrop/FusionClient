@@ -32,10 +32,13 @@ var loadFolder : String = ProjectSettings.globalize_path("res://Data/")
 @onready var loadDialog : FileDialog = $CanvasLayer/UI/FileDialogHolder/LoadDialog
 @onready var exitDialog : ConfirmationDialog = $CanvasLayer/UI/FileDialogHolder/ExitDialog
 @onready var messageDialog : AcceptDialog = $CanvasLayer/UI/FileDialogHolder/MessageDialog
+@onready var nameEdit : LineEdit = $CanvasLayer/UI/Menu/Holder/Left/NameEdit
 
 func _ready():
 	saveDialog.current_path = saveFolder
 	loadDialog.current_path = loadFolder
+	
+	boardNode.editor = self
 
 func openNewDialog() -> void:
 	newDialog.show()
@@ -81,6 +84,13 @@ func onLoadConfirmed(path : String) -> void:
 
 func onExitConfirmed() -> void:
 	get_tree().change_scene_to_packed(Preloader.startScreen)
+
+
+func getBoardName() -> String:
+	return nameEdit.get_text()
+
+func setBoardName(boardName : String) -> void:
+	nameEdit.set_text(boardName)
 
 ####################################################################################################
 

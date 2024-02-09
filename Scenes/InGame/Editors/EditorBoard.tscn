@@ -59,6 +59,12 @@ text = "Save"
 layout_mode = 2
 text = "Load"
 
+[node name="NameEdit" type="LineEdit" parent="CanvasLayer/UI/Menu/Holder/Left"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+placeholder_text = "Board Name"
+alignment = 1
+
 [node name="Right" type="HBoxContainer" parent="CanvasLayer/UI/Menu/Holder"]
 layout_mode = 1
 anchors_preset = 15
