@@ -13,8 +13,15 @@ const territoryPacked : PackedScene = preload("res://Game/Scenes/InGame/Territor
 #Menu
 const startScreen : PackedScene = preload("res://Scenes/UI/StartScreen.tscn")
 const editorBoard : PackedScene = preload("res://Scenes/InGame/Editors/EditorBoard.tscn")
+const editorDeck : PackedScene = preload("res://Scenes/InGame/Editors/EditorDeck.tscn")
 const multiplayerLobby : PackedScene = preload("res://Scenes/Multiplayer/MultiplayerLobby.tscn")
 const main : PackedScene = preload("res://Scenes/InGame/Main.tscn")
+
+#Previews
+const previewDeck : PackedScene = preload("res://Scenes/InGame/Previews/PreviewDeck.tscn")
+const previewBoard : PackedScene = preload("res://Scenes/InGame/Previews/PreviewBoard.tscn")
+const previewRandom : PackedScene = preload("res://Scenes/InGame/Previews/PreviewRandom.tscn")
+const previewNew : PackedScene = preload("res://Scenes/InGame/Previews/PreviewNew.tscn")
 
 #Base nodes
 const territoryNode : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNode.tscn")

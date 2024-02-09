@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxt7w1fm8uvjj"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewBoard.gd" id="1_5a75w"]
+[ext_resource type="PackedScene" uid="uid://c3cvtp0lqcvru" path="res://Scenes/InGame/Previews/PreviewBase.tscn" id="1_enly8"]
+[ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNode.tscn" id="2_bkqto"]
+
+[node name="PreviewBoard" instance=ExtResource("1_enly8")]
+script = ExtResource("1_5a75w")
+
+[node name="Center" type="Control" parent="." index="1"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoardNode" parent="Center" index="0" instance=ExtResource("2_bkqto")]
+
+[node name="Camera2D" type="Camera2D" parent="." index="3"]

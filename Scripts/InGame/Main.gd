@@ -93,6 +93,10 @@ func quitToMenu() -> void:
 func onQuitAnswered():
 	quitToMenu()
 
+@rpc("authority", "call_remote", "reliable")
+func onGenOpponentElements(elements : Array):
+	print(elements)
+
 ####################################################################################################
 ###   DUMMY FUNCTIONS FOR RPC   ###
 

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfm1w1lo5vyns"]
+
+[ext_resource type="PackedScene" uid="uid://tjqfdbjqdroh" path="res://Scenes/InGame/Previews/SelectorBase.tscn" id="1_0uvw7"]
+[ext_resource type="Script" path="res://Scripts/InGame/Previews/SelectorBoard.gd" id="1_qvnxr"]
+
+[node name="SelectorBoard" instance=ExtResource("1_0uvw7")]
+script = ExtResource("1_qvnxr")

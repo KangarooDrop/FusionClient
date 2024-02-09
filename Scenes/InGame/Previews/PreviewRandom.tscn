@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbjf0i2ivx8b5"]
+
+[ext_resource type="PackedScene" uid="uid://c3cvtp0lqcvru" path="res://Scenes/InGame/Previews/PreviewBase.tscn" id="1_26yf4"]
+[ext_resource type="Texture2D" uid="uid://0xhedpfqvgxw" path="res://Art/dice.png" id="1_lr73n"]
+[ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewRandom.gd" id="2_53lv1"]
+
+[node name="PreviewRandom" instance=ExtResource("1_26yf4")]
+script = ExtResource("2_53lv1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." index="0"]
+texture = ExtResource("1_lr73n")

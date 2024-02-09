@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmw435ejuquvw"]
+
+[ext_resource type="PackedScene" uid="uid://tjqfdbjqdroh" path="res://Scenes/InGame/Previews/SelectorBase.tscn" id="1_gnk4d"]
+[ext_resource type="Script" path="res://Scripts/InGame/Previews/SelectorDeck.gd" id="2_77l5q"]
+
+[node name="SelectorDeck" instance=ExtResource("1_gnk4d")]
+script = ExtResource("2_77l5q")
+canRandom = true

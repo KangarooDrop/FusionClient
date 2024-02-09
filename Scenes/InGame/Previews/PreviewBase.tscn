@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3cvtp0lqcvru"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewBase.gd" id="1_h6x4v"]
+
+[node name="PreviewBase" type="Node2D"]
+script = ExtResource("1_h6x4v")
+
+[node name="SelectionRect" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="SelectionRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NameLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.0
+offset_top = -123.5
+offset_right = 29.0
+offset_bottom = -100.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Sbubby"
+horizontal_alignment = 1
+
+[node name="VotesLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.0
+offset_top = -103.5
+offset_right = 43.0
+offset_bottom = -80.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Votes: 1/10"
+
+[connection signal="child_entered_tree" from="." to="." method="onChildAdded"]
+[connection signal="mouse_entered" from="SelectionRect" to="." method="onHoverEnter"]
+[connection signal="mouse_exited" from="SelectionRect" to="." method="onHoverExit"]

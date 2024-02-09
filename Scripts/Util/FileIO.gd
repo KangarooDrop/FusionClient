@@ -1,6 +1,26 @@
 
 class_name FileIO
 
+const BOARD_PATH : String = "user://boards/"
+const DECK_PATH : String = "user://decks/"
+
+static func readCSV(path : String) -> Array:
+	if FileAccess.file_exists(path):
+		var data : Array = []
+		var file : FileAccess = FileAccess.open(path, FileAccess.READ)
+		var text : String = file.get_as_text()
+		
+		for line in text.split("\n"):
+			data.append(line.split(','))
+		file.close()
+		
+		return data
+	else:
+		print("Error finding csv file at ", path)
+	
+	return []
+
+
 static func readJson(path : String) -> Dictionary:
 	if FileAccess.file_exists(path):
 		var file : FileAccess = FileAccess.open(path, FileAccess.READ)
