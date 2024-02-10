@@ -5,4 +5,3 @@
 
 [node name="SelectorDeck" instance=ExtResource("1_gnk4d")]
 script = ExtResource("2_77l5q")
-canRandom = true

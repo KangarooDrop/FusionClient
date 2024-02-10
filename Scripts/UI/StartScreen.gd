@@ -37,6 +37,11 @@ func tryReconnect() -> bool:
 	return false
 
 ####################################################################################################
+
+func canJoinMultiplayer() -> bool:
+	return Util.getAllDeckData().size() > 0
+
+####################################################################################################
 ###   BUTTONS   ###
 
 func onDeckEditorPressed():
@@ -46,7 +51,10 @@ func onBoardEditorPressed():
 	get_tree().change_scene_to_packed(Preloader.editorBoard)
 
 func onMultiplayerPressed():
-	get_tree().change_scene_to_packed(Preloader.multiplayerLobby)
+	if canJoinMultiplayer():
+		get_tree().change_scene_to_packed(Preloader.multiplayerLobby)
+	else:
+		print("ERROR: No Decks. Try out the deck editor (once I've made it)")
 
 func onSettingsPressed():
 	pass

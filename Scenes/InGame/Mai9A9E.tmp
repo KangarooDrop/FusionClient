@@ -8,17 +8,21 @@
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0cbnh")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-
 [node name="BoardNode" parent="." instance=ExtResource("2_ddyov")]
 visible = false
 
 [node name="SelectorBoard" parent="." instance=ExtResource("3_fpxvx")]
 visible = false
-canVote = true
+canRandom = false
+canCreateNew = false
+canOpenFolder = false
+canVote = false
 
 [node name="SelectorDeck" parent="." instance=ExtResource("4_r8pxr")]
 visible = false
+canCreateNew = false
+canOpenFolder = false
+canVote = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -63,7 +67,5 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Quit"
 
-[connection signal="onVote" from="SelectorBoard" to="." method="onBoardVote"]
-[connection signal="onSelect" from="SelectorDeck" to="." method="onDeckSelected"]
 [connection signal="pressed" from="CanvasLayer/ConcedeButton" to="." method="onConcedePressed"]
 [connection signal="pressed" from="CanvasLayer/QuitButton" to="." method="onQuitPressed"]

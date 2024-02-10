@@ -12,3 +12,4 @@ func preview(data : Dictionary) -> void:
 		var boardRect : Rect2 = board.getRect()
 		var minBoardScale : float = min(defaultRectSize.x / boardRect.size.x, defaultRectSize.y / boardRect.size.y)
 		board.scale = Vector2(minBoardScale, minBoardScale) * 0.9
+		setName(board.getBoardName())

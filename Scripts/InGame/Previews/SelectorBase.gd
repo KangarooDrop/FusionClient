@@ -2,8 +2,6 @@ extends Node2D
 
 class_name SelectorBase
 
-@export var canRandom : bool = false
-@export var canCreateNew : bool = false
 @export var canOpenFolder : bool = false
 @export var canVote : bool = false
 
@@ -32,7 +30,6 @@ var newPreview = null
 var randomPreview = null
 
 @onready var holder : Node2D = $Holder
-@onready var cam : Camera2D = $Camera2D
 
 signal onSelect(preview : PreviewBase)
 signal onVote(preview : PreviewBase)
@@ -43,7 +40,7 @@ func clear() -> void:
 	holderToPreview.clear()
 	randomPreview = null
 	index = 0
-	scrollMax = 0.0
+	scrollMin = 0.0
 
 func setVotes(votes : Dictionary, totalVotes : int = -1) -> void:
 	if totalVotes == -1:
@@ -62,12 +59,14 @@ func getPreview() -> PreviewBase:
 
 func addAllPreviews(data : Array) -> void:
 	clear()
-	if canCreateNew:
-		addPreviewNew()
-	if canRandom:
-		addPreviewRandom()
 	for i in range(data.size()):
-		addPreview(data[i])
+		if typeof(data[i]) == TYPE_STRING:
+			if data[i] == "random":
+				addPreviewRandom()
+			elif data[i] == "new":
+				addPreviewNew()
+		else:
+			addPreview(data[i])
 		await get_tree().create_timer(timeBetweenAdd).timeout
 
 func addPreview(data : Dictionary) -> void:
@@ -99,7 +98,7 @@ func addPreviewNode(previewNode : PreviewBase):
 		previewNode.showVotes()
 	
 	prevHolder.position = previewPosStart + Vector2(index / numRows, index % numRows) * previewPosOffset
-	scrollMax = prevHolder.position.x - previewPosOffset.x
+	scrollMin = min(scrollMin, -prevHolder.position.x + previewPosOffset.x)
 	index += 1
 
 func _process(delta):
@@ -113,7 +112,7 @@ func _process(delta):
 		prevHolder.scale = Vector2.ONE * lerp(dropMinScale, dropMaxScale, t)
 	
 	lastMousePositionLocal = get_viewport().get_mouse_position()
-	lastViewportSize = cam.get_viewport_rect().size
+	lastViewportSize = get_viewport_rect().size
 	
 	checkMove(delta)
 
@@ -124,7 +123,7 @@ func checkMove(delta : float):
 	else:
 		sld = getDistScrollLeft()
 	if sld > 0:
-		cam.position.x = max(scrollMin, cam.position.x - scrollSpeed * delta * sld)
+		position.x = min(scrollMax, position.x + scrollSpeed * delta * sld)
 	
 	var srd : float = 0.0
 	if Input.is_action_pressed("right"):
@@ -132,7 +131,7 @@ func checkMove(delta : float):
 	else:
 		srd = getDistScrollRight()
 	if srd > 0:
-		cam.position.x = min(scrollMax, cam.position.x + scrollSpeed * delta * srd)
+		position.x = max(scrollMin, position.x - scrollSpeed * delta * srd)
 
 func getDistScrollLeft() -> float:
 	return min((scrollWidth - lastMousePositionLocal.x) / scrollWidth, 1.0)

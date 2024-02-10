@@ -23,8 +23,8 @@ func onExitPressed() -> void:
 	
 ####################################################################################################
 
-var saveFolder : String = ProjectSettings.globalize_path("res://Data/")
-var loadFolder : String = ProjectSettings.globalize_path("res://Data/")
+var saveFolder : String = ProjectSettings.globalize_path("user://boards/")
+var loadFolder : String = ProjectSettings.globalize_path("user://boards/")
 
 @onready var dialogHolder : Control = $CanvasLayer/UI/FileDialogHolder
 @onready var newDialog : ConfirmationDialog = $CanvasLayer/UI/FileDialogHolder/NewDialog

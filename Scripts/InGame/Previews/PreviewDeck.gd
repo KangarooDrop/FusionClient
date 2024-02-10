@@ -8,9 +8,6 @@ const rotDiff : float = PI/16.0
 const dstDiff : float = 16.0
 var cardNodes : Array = []
 
-func _ready():
-	preview(FileIO.readJson("res://CustomDecks/test_deck.json"))
-
 #Takes in parsed deck data and displays a random selection of cards
 func preview(deckData : Dictionary) -> void:
 	for c in cardNodes:
