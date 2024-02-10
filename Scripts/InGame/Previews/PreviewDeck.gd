@@ -16,10 +16,10 @@ func preview(deckData : Dictionary) -> void:
 	var point : Vector2 = Vector2(-dstDiff*numCards/2.0, 0.0)
 	for i in range(numCards):
 		var randCardIndex : int = getRandomCardIndex(deckData)
-		var cardData : Dictionary = ListOfCards.getCardData(randCardIndex)
+		var cardData : CardData = ListOfCards.getCardByID(randCardIndex)
 		var cardNode : CardNode = Preloader.cardPacked.instantiate()
 		add_child(cardNode)
-		cardNode.setData(cardData)
+		cardNode.setCardData(cardData)
 		cardNodes.append(cardNode)
 		cardNode.position = Vector2(dstDiff*(numCards-1)/2.0 - dstDiff * i, 0.0)
 		cardNode.rotation = rotDiff * (numCards-1)/2.0 - rotDiff * i
