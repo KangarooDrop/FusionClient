@@ -7,4 +7,4 @@ script = ExtResource("1_cjwv7")
 
 [node name="TerritoryHolder" type="Node2D" parent="."]
 
-[node name="PathHolder" type="Node2D" parent="."]
+[node name="LineHolder" type="Node2D" parent="."]

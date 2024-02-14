@@ -130,7 +130,7 @@ ignore_rotation = false
 
 [node name="BoardEditable" parent="." instance=ExtResource("2_yy7dr")]
 
-[node name="PathHighlight" type="Line2D" parent="."]
+[node name="LineHighlight" type="Line2D" parent="."]
 visible = false
 points = PackedVector2Array(0, 0, 0, 0)
 
@@ -139,6 +139,7 @@ points = PackedVector2Array(0, 0, 0, 0)
 [connection signal="pressed" from="CanvasLayer/UI/Menu/Holder/Left/NewButton" to="." method="onNewPressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Menu/Holder/Left/SaveButton" to="." method="onSavePressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Menu/Holder/Left/LoadButton" to="." method="onLoadPressed"]
+[connection signal="text_changed" from="CanvasLayer/UI/Menu/Holder/Left/NameEdit" to="." method="setBoardName"]
 [connection signal="pressed" from="CanvasLayer/UI/Menu/Holder/Right/ExitButton" to="." method="onExitPressed"]
 [connection signal="confirmed" from="CanvasLayer/UI/FileDialogHolder/NewDialog" to="." method="onNewConfirmed"]
 [connection signal="file_selected" from="CanvasLayer/UI/FileDialogHolder/SaveDialog" to="." method="onSaveConfirmed"]

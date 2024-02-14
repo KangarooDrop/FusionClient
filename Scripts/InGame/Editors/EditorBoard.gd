@@ -3,7 +3,7 @@ extends Node2D
 @onready var cam : Camera2D = $Camera2D
 
 @onready var boardNode : BoardEditable = $BoardEditable
-@onready var pathHighlight : Line2D = $PathHighlight
+@onready var lineHighlight : Line2D = $LineHighlight
 @onready var ui : Control = $CanvasLayer/UI
 
 ####################################################################################################
@@ -75,11 +75,12 @@ func onLoadConfirmed(path : String) -> void:
 	print("Loading...")
 	var backupData : Dictionary = boardNode.getSaveData()
 	var data : Dictionary = FileIO.readJson(path)
-	var error : BoardNode.LOAD_ERROR = boardNode.loadSaveData(data)
-	if error != BoardNode.LOAD_ERROR.OK:
-		boardNode.loadSaveData(backupData)
-		openMessageDialog("ERROR", BoardNode.getLoadErrorString(error))
+	
+	var error : Validator.BOARD_CODE = Validator.validateBoard(data)
+	if error != Validator.BOARD_CODE.OK:
+		openMessageDialog("ERROR", Validator.getLoadErrorString(error))
 	else:
+		boardNode.loadSaveData(data)
 		resetCam()
 
 func onExitConfirmed() -> void:
@@ -90,7 +91,10 @@ func getBoardName() -> String:
 	return nameEdit.get_text()
 
 func setBoardName(boardName : String) -> void:
-	nameEdit.set_text(boardName)
+	boardNode.bd.name = boardName
+
+func setNameLabelText(text : String) -> void:
+	nameEdit.set_text(text)
 
 ####################################################################################################
 
@@ -131,13 +135,13 @@ func _input(event):
 					if not is_instance_valid(hoverTerritory):
 						boardNode.makeTerritory(get_global_mouse_position())
 					else:
-						pathHighlight.show()
+						lineHighlight.show()
 				else:
 					if hoverTimer >= hoverMaxTime:
 						holdTerritory = null
 					else:
 						connectHoverTerritory()
-						pathHighlight.hide()
+						lineHighlight.hide()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:
 				rmbHeld = event.pressed
 			
@@ -198,24 +202,25 @@ func _process(delta):
 			hoverTimer += delta
 			if hoverTimer >= hoverMaxTime:
 				holdTerritory = hoverTerritory
-				pathHighlight.hide()
+				lineHighlight.hide()
 				endHover()
 	elif is_instance_valid(holdTerritory):
 		if holdTerritory.position != mouseGlobalPosition:
-			boardNode.moveTerritory(holdTerritory, mouseGlobalPosition)
+			var snappedPos : Vector2 = Vector2(snapped(mouseGlobalPosition, Vector2(32, 32)))
+			boardNode.moveTerritory(holdTerritory, snappedPos)
 	
-	if pathHighlight.visible:
-		pathHighlight.points[0] = hoverTerritory.position
-		pathHighlight.points[1] = mouseGlobalPosition
+	if lineHighlight.visible:
+		lineHighlight.points[0] = hoverTerritory.position
+		lineHighlight.points[1] = mouseGlobalPosition
 	
 	if rmbHeld:
 		var ov = getOverlappingTerritory()
-		var path = getOverlapplingPath()
+		var line = getOverlapplingLine()
 		if is_instance_valid(ov):
 			boardNode.removeTerritory(ov)
-		if is_instance_valid(path):
-			var pathTerritories : Array = boardNode.getTerritoriesFromPathNode(path)
-			boardNode.disconnectTerritories(pathTerritories[0], pathTerritories[1])
+		elif is_instance_valid(line):
+			var lineTerritories : Array = boardNode.lineToNodes[line]
+			boardNode.disconnectTerritories(lineTerritories[0], lineTerritories[1])
 	
 	if Input.is_key_pressed(KEY_W):
 		cam.position.y -= camMoveSpeed * delta
@@ -233,8 +238,8 @@ func _process(delta):
 func getOverlappingTerritory() -> TerritoryNode:
 	return boardNode.getOverlappingTerritory(mouseGlobalPosition)
 
-func getOverlapplingPath() -> Line2D:
-	return boardNode.getOverlappingPath(mouseGlobalPosition)
+func getOverlapplingLine() -> Line2D:
+	return boardNode.getOverlappingLine(mouseGlobalPosition)
 
 func connectHoverTerritory() -> void:
 	if is_instance_valid(hoverTerritory):

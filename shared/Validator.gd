@@ -42,6 +42,8 @@ static func validateDeck(deckData : Dictionary) -> int:
 
 ####################################################################################################
 
+const BOARD_VERSION : String = "0.01"
+
 enum BOARD_CODE \
 {
 	OK,
@@ -49,9 +51,58 @@ enum BOARD_CODE \
 	ERR_NOT_DICT,
 	ERR_BAD_KEYS,
 	ERR_OLD_VERSION,
+	ERR_BAD_TYPE,
 	
-	ERR_INVALID_TERR_INDEX
+	ERR_TERR_BAD,
+	ERR_PATH_BAD,
 }
 
-static func validateBoard(boardData : Dictionary) -> int:
+static func getLoadErrorString(error : BOARD_CODE) -> String:
+	match error:
+		BOARD_CODE.ERR_NOT_DICT:
+			return "Corrupted: The file could not be loaded or the JSON data could not be parsed."
+		BOARD_CODE.ERR_BAD_KEYS:
+			return "Missing Key: The JSON data was missing a vital key."
+		BOARD_CODE.ERR_OLD_VERSION:
+			return "Wrong Version: The versions of the game and save file don't match."
+		BOARD_CODE.ERR_BAD_TYPE:
+			return "Bad Type: There was an incorrect data type found."
+		BOARD_CODE.ERR_TERR_BAD:
+			return "Territory: An error occured when trying to load in territory data."
+		BOARD_CODE.ERR_PATH_BAD:
+			return "Path: An error occured when trying to connect the paths."
+		_:
+			return "_NONE"
+
+static func validateBoard(bd : Dictionary) -> int:
+	if bd.is_empty():
+		return BOARD_CODE.ERR_NOT_DICT
+	
+	elif not bd.has("name") or not bd.has("ver") or not bd.has("terrs") or not bd.has("conns"):
+		return BOARD_CODE.ERR_BAD_KEYS
+	
+	elif bd["ver"] != BOARD_VERSION:
+		return BOARD_CODE.ERR_OLD_VERSION
+	
+	elif typeof(bd["terrs"]) != TYPE_ARRAY or typeof(bd["conns"]) != TYPE_ARRAY or typeof(bd["name"]) != TYPE_STRING or typeof(bd["ver"]) != TYPE_STRING:
+		return BOARD_CODE.ERR_BAD_TYPE
+	
+	for tData in bd["terrs"]:
+		if typeof(tData) != TYPE_DICTIONARY:
+			return BOARD_CODE.ERR_TERR_BAD
+		elif not tData.has("name") or not tData.has("pos_x") or not tData.has("pos_y"):
+			return BOARD_CODE.ERR_TERR_BAD
+		elif typeof(tData["name"]) != TYPE_STRING or typeof(tData["pos_x"]) != TYPE_FLOAT or typeof(tData["pos_y"]) != TYPE_FLOAT:
+			return BOARD_CODE.ERR_TERR_BAD
+	
+	for path in bd["conns"]:
+		if typeof(path) != TYPE_ARRAY:
+			return BOARD_CODE.ERR_PATH_BAD
+		elif path.size() != 2:
+			return BOARD_CODE.ERR_PATH_BAD
+		elif typeof(path[0]) != TYPE_FLOAT or typeof(path[1]) != TYPE_FLOAT:
+			return BOARD_CODE.ERR_PATH_BAD
+		elif path[0] < 0 or path[0] >= bd["terrs"].size() or path[1] < 0 or path[1] >= bd["terrs"].size() or int(path[0]) == int(path[1]):
+			return BOARD_CODE.ERR_PATH_BAD
+	
 	return BOARD_CODE.OK

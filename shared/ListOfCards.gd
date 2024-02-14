@@ -33,8 +33,6 @@ func _ready():
 			dict[keys[j]] = datum
 		var card : CardData = CardData.new(dict)
 		cards.append(card)
-	
-	print(getCardByID(0))
 
 func getCardByID(index : int) -> CardData:
 	if index < 0 or index >= cards.size():
