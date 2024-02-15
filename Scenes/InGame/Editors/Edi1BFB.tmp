@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://2a3531dl7e5q"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Editors/EditorBoard.gd" id="1_bubis"]
-[ext_resource type="PackedScene" uid="uid://b5gxuskm5c0f4" path="res://Scenes/InGame/Boards/BoardNodeEditable.tscn" id="2_dypo2"]
+[ext_resource type="PackedScene" uid="uid://b5gxuskm5c0f4" path="res://Scenes/InGame/Boards/BoardEditable.tscn" id="2_yy7dr"]
 
 [node name="BoardEditor" type="Node2D"]
 script = ExtResource("1_bubis")
@@ -128,7 +128,7 @@ ignore_rotation = false
 
 [node name="Node2D" type="Node2D" parent="."]
 
-[node name="BoardEditable" parent="." instance=ExtResource("2_dypo2")]
+[node name="BoardEditable" parent="." instance=ExtResource("2_yy7dr")]
 
 [node name="LineHighlight" type="Line2D" parent="."]
 visible = false

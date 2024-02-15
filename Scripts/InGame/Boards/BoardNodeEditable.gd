@@ -1,8 +1,11 @@
-extends BoardNode
+extends BoardNodeBase
 
-class_name BoardEditable
+class_name BoardNodeEditable
 
 var editor
+
+func getTerritoryPacked() -> PackedScene:
+	return Preloader.territoryNodeEditable
 
 func clear():
 	super.clear()

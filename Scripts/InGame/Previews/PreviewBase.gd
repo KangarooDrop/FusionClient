@@ -33,7 +33,7 @@ func setVotes(votes : int, totalVotes : int) -> void:
 	votesLabel.show()
 	votesLabel.set_text("Votes: " + str(votes) + "/" + str(totalVotes))
 
-func onChildAdded(child) -> void:
+func onChildAdded(_child) -> void:
 	if is_instance_valid(selectionRect):
 		move_child(selectionRect, get_child_count() - 1)
 
@@ -65,5 +65,5 @@ func _input(event):
 			print("Preview pressed: ", getName())
 
 #Function to be overloaded to set preview data
-func preview(data : Dictionary) -> void:
+func preview(_data : Dictionary) -> void:
 	pass

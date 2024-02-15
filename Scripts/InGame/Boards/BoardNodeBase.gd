@@ -1,11 +1,11 @@
 extends Node2D
 
-class_name BoardNode
+class_name BoardNodeBase
 
 @onready var territyHolder : Node2D = $TerritoryHolder
 @onready var lineHolder : Node2D = $LineHolder
 
-var bd : BoardData
+var bd : BoardDataBase
 
 var nodeToTerritoryData : Dictionary = {}
 var territoryDataToNode : Dictionary = {}
@@ -14,7 +14,7 @@ var nodeToLines : Dictionary = {}
 var lineToNodes : Dictionary = {}
 
 func _ready():
-	bd = BoardData.new()
+	bd = BoardDataBase.new()
 	bd.connect("onClear", self.onClear)
 	
 	bd.connect("onTerritoryMoved", self.onTerritoryMoved)
@@ -36,16 +36,17 @@ func onClear():
 	nodeToLines.clear()
 	lineToNodes.clear()
 
-func onTerritoryAdded(td : BoardData.TerritoryData):
-	var terr : TerritoryNode = getTerritoryPacked().instantiate()
+func onTerritoryAdded(td : TerritoryDataBase):
+	var terr : TerritoryNodeBase = getTerritoryPacked().instantiate()
+	terr.td = td
 	territyHolder.add_child(terr)
 	terr.position = td.position
 	territoryDataToNode[td] = terr
 	nodeToTerritoryData[terr] = td
 	nodeToLines[terr] = []
 
-func territoryRemoved(td : BoardData.TerritoryData):
-	var terr : TerritoryNode = territoryDataToNode[td]
+func territoryRemoved(td : TerritoryDataBase):
+	var terr : TerritoryNodeBase = territoryDataToNode[td]
 	for t in bd.paths[td].keys():
 		if bd.paths[td][t]:
 			beforePathRemoved(td, t)
@@ -53,8 +54,8 @@ func territoryRemoved(td : BoardData.TerritoryData):
 	territoryDataToNode.erase(td)
 	terr.queue_free()
 
-func onTerritoryMoved(td : BoardData.TerritoryData):
-	var terr : TerritoryNode = territoryDataToNode[td]
+func onTerritoryMoved(td : TerritoryDataBase):
+	var terr : TerritoryNodeBase = territoryDataToNode[td]
 	terr.position = td.position
 	for line in nodeToLines[terr]:
 		moveLine(line, lineToNodes[line][0].position, lineToNodes[line][1].position)
@@ -63,9 +64,9 @@ func moveLine(line : Line2D, startPos : Vector2, endPos : Vector2):
 	line.position = startPos
 	line.points = PackedVector2Array([Vector2(), endPos - startPos])
 
-func onPathAdded(td0 : BoardData.TerritoryData, td1 : BoardData.TerritoryData):
-	var terr0 : TerritoryNode = territoryDataToNode[td0]
-	var terr1 : TerritoryNode = territoryDataToNode[td1]
+func onPathAdded(td0 : TerritoryDataBase, td1 : TerritoryDataBase):
+	var terr0 : TerritoryNodeBase = territoryDataToNode[td0]
+	var terr1 : TerritoryNodeBase = territoryDataToNode[td1]
 	var line : Line2D = Line2D.new()
 	lineHolder.add_child(line)
 	moveLine(line, terr0.position, terr1.position)
@@ -73,29 +74,29 @@ func onPathAdded(td0 : BoardData.TerritoryData, td1 : BoardData.TerritoryData):
 	nodeToLines[terr1].append(line)
 	lineToNodes[line] = [terr0, terr1]
 
-func beforePathRemoved(td0 : BoardData.TerritoryData, td1 : BoardData.TerritoryData):
-	var terr0 : TerritoryNode = territoryDataToNode[td0]
-	var terr1 : TerritoryNode = territoryDataToNode[td1]
+func beforePathRemoved(td0 : TerritoryDataBase, td1 : TerritoryDataBase):
+	var terr0 : TerritoryNodeBase = territoryDataToNode[td0]
+	var terr1 : TerritoryNodeBase = territoryDataToNode[td1]
 	var line : Line2D = getLine(terr0, terr1)
 	lineToNodes.erase(line)
 	nodeToLines[terr0].erase(line)
 	nodeToLines[terr1].erase(line)
 	line.queue_free()
 
-func connectTerritories(terr0 : TerritoryNode, terr1 : TerritoryNode) -> void:
+func connectTerritories(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase) -> void:
 	if terr0 != terr1:
-		var td0 : BoardData.TerritoryData = nodeToTerritoryData[terr0]
-		var td1 : BoardData.TerritoryData = nodeToTerritoryData[terr1]
+		var td0 : TerritoryDataBase = nodeToTerritoryData[terr0]
+		var td1 : TerritoryDataBase = nodeToTerritoryData[terr1]
 		bd.setPath(td0, td1, true)
 
-func disconnectTerritories(terr0 : TerritoryNode, terr1 : TerritoryNode):
+func disconnectTerritories(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase):
 	if terr0 != terr1:
-		var td0 : BoardData.TerritoryData = nodeToTerritoryData[terr0]
-		var td1 : BoardData.TerritoryData = nodeToTerritoryData[terr1]
+		var td0 : TerritoryDataBase = nodeToTerritoryData[terr0]
+		var td1 : TerritoryDataBase = nodeToTerritoryData[terr1]
 		bd.setPath(td0, td1, false)
 
 #Returns the line node connecting two territories if it exists
-func getLine(terr0 : TerritoryNode, terr1 : TerritoryNode) -> Line2D:
+func getLine(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase) -> Line2D:
 	for line in lineToNodes.keys():
 		if lineToNodes[line] == [terr0, terr1] or lineToNodes[line] == [terr1, terr0]:
 			return line
@@ -109,7 +110,7 @@ func clear() -> void:
 ####################################################################################################
 
 func getTerritoryPacked() -> PackedScene:
-	return Preloader.territoryNode
+	return Preloader.territoryNodeBase
 
 func getAllTerritories() -> Array:
 	return territyHolder.get_children()
@@ -120,22 +121,22 @@ func getAllLines() -> Array:
 func makeTerritory(pos : Vector2) -> void:
 	bd.addTerritory("", pos)
 
-func removeTerritory(terr : TerritoryNode) -> void:
+func removeTerritory(terr : TerritoryNodeBase) -> void:
 	bd.removeTerritory(nodeToTerritoryData[terr])
 
 #Change the position of a territory and any line connected to it
-func moveTerritory(terr : TerritoryNode, pos : Vector2) -> void:
-	var td : BoardData.TerritoryData = nodeToTerritoryData[terr]
+func moveTerritory(terr : TerritoryNodeBase, pos : Vector2) -> void:
+	var td : TerritoryDataBase = nodeToTerritoryData[terr]
 	bd.moveTerritory(td, pos)
 
 ####################################################################################################
 
-func isConnected(terr0 : TerritoryNode, terr1 : TerritoryNode) -> bool:
-	var td0 : BoardData.TerritoryData = nodeToTerritoryData[terr0]
-	var td1 : BoardData.TerritoryData = nodeToTerritoryData[terr1]
+func isConnected(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase) -> bool:
+	var td0 : TerritoryDataBase = nodeToTerritoryData[terr0]
+	var td1 : TerritoryDataBase = nodeToTerritoryData[terr1]
 	return bd.paths[td0][td1]
 
-func getOverlappingTerritory(pos : Vector2) -> TerritoryNode:
+func getOverlappingTerritory(pos : Vector2) -> TerritoryNodeBase:
 	for terr in getAllTerritories():
 		if (terr.position - pos).length() < terr.radius:
 			return terr
@@ -179,7 +180,7 @@ func getRect() -> Rect2:
 	var minY : float = terrs[0].position.y
 	var maxY : float = terrs[0].position.y
 	for i in range(1, terrs.size()):
-		var terr : TerritoryNode = terrs[i]
+		var terr : TerritoryNodeBase = terrs[i]
 		if terr.position.x < minX:
 			minX = terr.position.x
 		if terr.position.x > maxX:

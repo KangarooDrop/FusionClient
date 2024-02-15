@@ -1,7 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckaj8u62eoegf"]
-
-[ext_resource type="PackedScene" uid="uid://dr3ksfmhbhh7i" path="res://Scenes/InGame/Territories/TerritoryNode.tscn" id="1_jxi3t"]
-[ext_resource type="Script" path="res://Scripts/InGame/Territories/TerritoryEditable.gd" id="2_4d4sj"]
-
-[node name="TerritoryEditor" instance=ExtResource("1_jxi3t")]
-script = ExtResource("2_4d4sj")

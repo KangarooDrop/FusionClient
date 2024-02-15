@@ -1,16 +1,7 @@
 
-class_name BoardData
+class_name BoardDataBase
 
 const BOARD_VERSION : String = "0.01"
-
-class TerritoryData:
-	var name : String = ""
-	var position : Vector2 = Vector2()
-	func _init(name, position):
-		self.name = name
-		self.position = position
-	func getSaveData() -> Dictionary:
-		return {"name":name, "pos_x":position.x, "pos_y":position.y}
 
 var name : String = ""
 var territories : Array = []
@@ -19,13 +10,16 @@ var paths : Dictionary = {}
 ####################################################################################################
 
 signal onClear()
-signal onTerritoryMoved(td : TerritoryData)
-signal onTerritoryAdded(td : TerritoryData)
-signal beforeTerritoryRemoved(td : TerritoryData)
-signal onPathAdded(td0 : TerritoryData, td1 : TerritoryData)
-signal beforePathRemoved(td0 : TerritoryData, td1 : TerritoryData)
+signal onTerritoryMoved(td : TerritoryDataBase)
+signal onTerritoryAdded(td : TerritoryDataBase)
+signal beforeTerritoryRemoved(td : TerritoryDataBase)
+signal onPathAdded(td0 : TerritoryDataBase, td1 : TerritoryDataBase)
+signal beforePathRemoved(td0 : TerritoryDataBase, td1 : TerritoryDataBase)
 
 ####################################################################################################
+
+func getTerritoryScript() -> Script:
+	return TerritoryDataBase
 
 func clear() -> void:
 	name = ""
@@ -33,8 +27,8 @@ func clear() -> void:
 	paths.clear()
 	emit_signal("onClear")
 
-func addTerritory(name : String, position : Vector2) -> TerritoryData:
-	var td0 : TerritoryData = TerritoryData.new(name, position)
+func addTerritory(name : String, position : Vector2, value : int = 1, size : int = 1) -> TerritoryDataBase:
+	var td0 : TerritoryDataBase = getTerritoryScript().new(name, position, value, size)
 	paths[td0] = {}
 	for td1 in territories:
 		paths[td1][td0] = false
@@ -43,7 +37,7 @@ func addTerritory(name : String, position : Vector2) -> TerritoryData:
 	emit_signal("onTerritoryAdded", td0)
 	return td0
 
-func removeTerritory(td : TerritoryData) -> void:
+func removeTerritory(td : TerritoryDataBase) -> void:
 	emit_signal("beforeTerritoryRemoved", td)
 	paths.erase(td)
 	for t in paths.keys():
@@ -90,12 +84,18 @@ func getSaveData() -> Dictionary:
 	
 	return data
 
-func loadSaveData(data : Dictionary) -> BoardData:
+func loadSaveData(data : Dictionary) -> BoardDataBase:
 	clear()
 	self.name = data["name"]
 	
 	for terrData in data["terrs"]:
-		addTerritory(terrData["name"], Vector2(terrData["pos_x"], terrData["pos_y"]))
+		var value : int = 1
+		if terrData.has("value"):
+			value = int(terrData["value"])
+		var size : int = 1
+		if terrData.has("size"):
+			size = int(terrData["size"])
+		addTerritory(terrData["name"], Vector2(terrData["pos_x"], terrData["pos_y"]), value, size)
 	
 	for pathData in data["conns"]:
 		setPath(int(pathData[0]), int(pathData[1]), true)

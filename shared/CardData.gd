@@ -47,3 +47,8 @@ func deserialize(data : Dictionary) -> void:
 
 func copy() -> CardData:
 	return self.get_script().new(serialize())
+
+####################################################################################################
+
+func canFuseTo(other : CardData) -> bool:
+	return true

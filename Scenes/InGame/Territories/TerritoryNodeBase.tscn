@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dr3ksfmhbhh7i"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/Territories/TerritoryNodeBase.gd" id="1_ivbxn"]
+[ext_resource type="Texture2D" uid="uid://bcj0to0ktq3kr" path="res://Art/territory.png" id="2_6x2pv"]
+
+[node name="TerritoryNodeBase" type="Node2D"]
+script = ExtResource("1_ivbxn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_6x2pv")

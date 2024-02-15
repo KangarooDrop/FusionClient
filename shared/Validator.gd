@@ -74,7 +74,7 @@ static func getLoadErrorString(error : BOARD_CODE) -> String:
 		_:
 			return "_NONE"
 
-static func validateBoard(bd : Dictionary) -> int:
+static func validateBoard(bd : Dictionary) -> BOARD_CODE:
 	if bd.is_empty():
 		return BOARD_CODE.ERR_NOT_DICT
 	
@@ -93,6 +93,8 @@ static func validateBoard(bd : Dictionary) -> int:
 		elif not tData.has("name") or not tData.has("pos_x") or not tData.has("pos_y"):
 			return BOARD_CODE.ERR_TERR_BAD
 		elif typeof(tData["name"]) != TYPE_STRING or typeof(tData["pos_x"]) != TYPE_FLOAT or typeof(tData["pos_y"]) != TYPE_FLOAT:
+			return BOARD_CODE.ERR_TERR_BAD
+		elif tData.has("size") and typeof(tData["size"]) != TYPE_FLOAT or tData.has("value") and typeof(tData["value"]) != TYPE_FLOAT:
 			return BOARD_CODE.ERR_TERR_BAD
 	
 	for path in bd["conns"]:

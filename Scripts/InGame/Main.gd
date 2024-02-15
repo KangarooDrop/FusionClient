@@ -13,9 +13,25 @@ const RECONNET_TIME_MAX : float = 45.0
 
 var timeOnEnd : float = -1
 
+####################################################################################################
+
+var selfPlayer : PlayerBase
+var allPlayers : Array = []
+var otherPlayers : Array = []
+var idToPlayer : Dictionary = {}
+
+####################################################################################################
+
 @onready var timerLabel : Label = $CanvasLayer/TimerLabel
 @onready var selectorBoard : SelectorBoard = $SelectorBoard
 @onready var selectorDeck : SelectorDeck = $SelectorDeck
+
+@onready var boardHolder : Node2D = $BoardHolder
+@onready var boardNode : BoardNodeGame = $BoardHolder/BoardNodeGame
+
+@onready var handHolder : Node2D = $HandHolder
+@onready var graveHolder : Node2D = $GraveHolder
+@onready var deckHolder : Node2D = $DeckHolder
 
 static func swapAndConnect(port : int) -> void:
 	var main = Preloader.main.instantiate()
@@ -108,15 +124,40 @@ func onQuitAnswered():
 	quitToMenu()
 
 @rpc("authority", "call_remote", "reliable")
-func onGetOpponentElements(elements : Array):
-	print(elements)
-
-@rpc("authority", "call_remote", "reliable")
 func syncTimerReceived(timeOnEnd : int):
 	self.timeOnEnd = timeOnEnd
 
 ####################################################################################################
 ###   BEFORE GAME   ###
+
+@rpc("authority", "call_remote", "reliable")
+func playerAdded(isSelf : bool, playerID : int, color : Color, username : String) -> void:
+	var playerData : PlayerBase = PlayerBase.new(playerID, color, username)
+	if isSelf:
+		selfPlayer = playerData
+	else:
+		otherPlayers.append(playerData)
+	idToPlayer[playerID] = playerData
+	allPlayers.append(playerData)
+	print(str(playerData) + " connected")
+
+@rpc("authority", "call_remote", "reliable")
+func playerRemoved(playerID : int) -> void:
+	var playerData : PlayerBase = idToPlayer[playerID]
+	otherPlayers.erase(playerData)
+	idToPlayer.erase(playerID)
+	allPlayers.erase(playerData)
+	print(str(playerData) + " dc'd")
+
+@rpc("authority", "call_remote", "reliable")
+func playerReconnected(oldID : int, newID : int) -> void:
+	var playerData : PlayerBase = idToPlayer[oldID]
+	idToPlayer.erase(oldID)
+	idToPlayer[newID] = playerData
+	playerData.playerID = newID
+	print("Player: " + str(oldID) + " reconnected as " + str(newID))
+
+####################################################################################################
 
 @rpc("authority", "call_remote", "reliable")
 func boardAllReceived(boardAllData : Array):
@@ -136,7 +177,7 @@ func onBoardVote(preview : PreviewBase) -> void:
 var deckDataOnCheck : Array = []
 
 @rpc("authority", "call_remote", "reliable")
-func onBoardChosen(boardData : Dictionary) -> void:
+func onBoardChosen() -> void:
 	print("Received chosen board")
 	selectorBoard.hide()
 	selectorDeck.show()
@@ -161,6 +202,17 @@ func gameStarted() -> void:
 	print("STARTING GAME!")
 	selectorDeck.hide()
 
+@rpc("authority", "call_remote", "reliable")
+func setBoardData(data : Dictionary) -> void:
+	boardNode.loadSaveData(data)
+
+@rpc("authority", "call_remote", "reliable")
+func onSetOpponentElements(playerID : int, elements : Array):
+	print(playerID, " ", elements)
+
+####################################################################################################
+
+
 ####################################################################################################
 ###   DUMMY FUNCTIONS FOR RPC   ###
 
@@ -179,5 +231,5 @@ func onPlayerBoardVote(_index : int) -> void:
 	pass
 
 @rpc("any_peer", "call_remote", "reliable")
-func deckSelected(deckData : Dictionary) -> void:
+func deckSelected(_deckData : Dictionary) -> void:
 	pass

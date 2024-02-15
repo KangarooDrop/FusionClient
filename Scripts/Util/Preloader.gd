@@ -24,12 +24,12 @@ const previewRandom : PackedScene = preload("res://Scenes/InGame/Previews/Previe
 const previewNew : PackedScene = preload("res://Scenes/InGame/Previews/PreviewNew.tscn")
 
 #Base nodes
-const territoryNode : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNode.tscn")
-const boardNode : PackedScene = preload("res://Scenes/InGame/Boards/BoardNode.tscn")
+const territoryNodeBase : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeBase.tscn")
+const boardNodeBase : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeBase.tscn")
 
 #Board editor nodes
-const territoryEditable : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryEditable.tscn")
-const boardEditable : PackedScene = preload("res://Scenes/InGame/Boards/BoardEditable.tscn")
+const territoryNodeEditable : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeEditable.tscn")
+const boardNodeEditable : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeEditable.tscn")
 
 #Game nodes
 const mainPacked : PackedScene = preload("res://Scenes/InGame/Main.tscn")

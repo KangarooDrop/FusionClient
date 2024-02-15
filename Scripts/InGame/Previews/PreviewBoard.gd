@@ -3,7 +3,7 @@ extends PreviewBase
 class_name PreviewBoard
 
 #Vars for previewing board
-@onready var board : BoardNode = $Center/BoardNode
+@onready var board : BoardNodeBase = $Center/BoardNode
 const defaultRectSize : Vector2 = Vector2(200, 200)
 
 func preview(data : Dictionary) -> void:

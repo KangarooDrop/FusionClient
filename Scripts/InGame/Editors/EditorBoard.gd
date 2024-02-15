@@ -2,7 +2,7 @@ extends Node2D
 
 @onready var cam : Camera2D = $Camera2D
 
-@onready var boardNode : BoardEditable = $BoardEditable
+@onready var boardNode : BoardNodeEditable = $BoardEditable
 @onready var lineHighlight : Line2D = $LineHighlight
 @onready var ui : Control = $CanvasLayer/UI
 
@@ -73,9 +73,7 @@ func onSaveConfirmed(path : String) -> void:
 
 func onLoadConfirmed(path : String) -> void:
 	print("Loading...")
-	var backupData : Dictionary = boardNode.getSaveData()
 	var data : Dictionary = FileIO.readJson(path)
-	
 	var error : Validator.BOARD_CODE = Validator.validateBoard(data)
 	if error != Validator.BOARD_CODE.OK:
 		openMessageDialog("ERROR", Validator.getLoadErrorString(error))
@@ -104,7 +102,7 @@ var mouseCamPosition : Vector2 = Vector2()
 var waitingForHold : bool = false
 const hoverMaxTime : float = 0.5	
 var hoverTimer : float = 0.0
-const hoverMaxDist : float = TerritoryNode.radius
+const hoverMaxDist : float = TerritoryNodeBase.radius
 var hoverTerritory = null
 var hoverPosition = null
 
@@ -235,7 +233,7 @@ func _process(delta):
 	if Input.is_key_pressed(KEY_E):
 		cam.rotation += camRotSpeed * delta
 
-func getOverlappingTerritory() -> TerritoryNode:
+func getOverlappingTerritory() -> TerritoryNodeBase:
 	return boardNode.getOverlappingTerritory(mouseGlobalPosition)
 
 func getOverlapplingLine() -> Line2D:

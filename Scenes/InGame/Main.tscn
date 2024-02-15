@@ -1,24 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://ckutom7bvbjj0"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Main.gd" id="1_0cbnh"]
-[ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNode.tscn" id="2_ddyov"]
 [ext_resource type="PackedScene" uid="uid://dfm1w1lo5vyns" path="res://Scenes/InGame/Previews/SelectorBoard.tscn" id="3_fpxvx"]
 [ext_resource type="PackedScene" uid="uid://dmw435ejuquvw" path="res://Scenes/InGame/Previews/SelectorDeck.tscn" id="4_r8pxr"]
+[ext_resource type="PackedScene" uid="uid://crjyaynppeu14" path="res://Scenes/InGame/Boards/BoardNodeGame.tscn" id="4_xhrs7"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0cbnh")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-
-[node name="BoardNode" parent="." instance=ExtResource("2_ddyov")]
-visible = false
-
-[node name="SelectorBoard" parent="." instance=ExtResource("3_fpxvx")]
-visible = false
-canVote = true
-
-[node name="SelectorDeck" parent="." instance=ExtResource("4_r8pxr")]
-visible = false
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -63,7 +53,24 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Quit"
 
-[connection signal="onVote" from="SelectorBoard" to="." method="onBoardVote"]
-[connection signal="onSelect" from="SelectorDeck" to="." method="onDeckSelected"]
+[node name="SelectorBoard" parent="." instance=ExtResource("3_fpxvx")]
+visible = false
+canVote = true
+
+[node name="SelectorDeck" parent="." instance=ExtResource("4_r8pxr")]
+visible = false
+
+[node name="BoardHolder" type="Node2D" parent="."]
+
+[node name="BoardNodeGame" parent="BoardHolder" instance=ExtResource("4_xhrs7")]
+
+[node name="HandHolder" type="Node2D" parent="."]
+
+[node name="GraveHolder" type="Node2D" parent="."]
+
+[node name="DeckHolder" type="Node2D" parent="."]
+
 [connection signal="pressed" from="CanvasLayer/ConcedeButton" to="." method="onConcedePressed"]
 [connection signal="pressed" from="CanvasLayer/QuitButton" to="." method="onQuitPressed"]
+[connection signal="onVote" from="SelectorBoard" to="." method="onBoardVote"]
+[connection signal="onSelect" from="SelectorDeck" to="." method="onDeckSelected"]

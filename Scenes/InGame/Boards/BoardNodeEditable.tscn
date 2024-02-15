@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5gxuskm5c0f4"]
+
+[ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNodeBase.tscn" id="1_ea4c6"]
+[ext_resource type="Script" path="res://Scripts/InGame/Boards/BoardNodeEditable.gd" id="2_1fhej"]
+
+[node name="BoardNodeEditable" instance=ExtResource("1_ea4c6")]
+script = ExtResource("2_1fhej")

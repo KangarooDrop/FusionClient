@@ -1,3 +1,0 @@
-extends TerritoryNode
-
-class_name TerritoryEditor
