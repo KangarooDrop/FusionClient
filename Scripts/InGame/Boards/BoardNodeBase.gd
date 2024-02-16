@@ -14,7 +14,7 @@ var nodeToLines : Dictionary = {}
 var lineToNodes : Dictionary = {}
 
 func _ready():
-	bd = BoardDataBase.new()
+	bd = getBoardDataScript().new()
 	bd.connect("onClear", self.onClear)
 	
 	bd.connect("onTerritoryMoved", self.onTerritoryMoved)
@@ -38,7 +38,7 @@ func onClear():
 
 func onTerritoryAdded(td : TerritoryDataBase):
 	var terr : TerritoryNodeBase = getTerritoryPacked().instantiate()
-	terr.td = td
+	terr.setTerritoryData(td)
 	territyHolder.add_child(terr)
 	terr.position = td.position
 	territoryDataToNode[td] = terr
@@ -109,6 +109,9 @@ func clear() -> void:
 
 ####################################################################################################
 
+func getBoardDataScript() -> Script:
+	return BoardDataBase
+
 func getTerritoryPacked() -> PackedScene:
 	return Preloader.territoryNodeBase
 
@@ -138,7 +141,7 @@ func isConnected(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase) -> bool:
 
 func getOverlappingTerritory(pos : Vector2) -> TerritoryNodeBase:
 	for terr in getAllTerritories():
-		if (terr.position - pos).length() < terr.radius:
+		if (terr.position - pos).length() < terr.getRadiusPixels():
 			return terr
 	return null
 

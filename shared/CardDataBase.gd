@@ -1,5 +1,9 @@
 
-class_name CardData
+class_name CardDataBase
+
+enum PHASE {START, DRAW, BET, ACTION, REVEAL, INVADE, END}
+
+####################################################################################################
 
 var uuid : int = -1
 var name : String = "_NONE"
@@ -45,10 +49,7 @@ func deserialize(data : Dictionary) -> void:
 	if data.has('art_file'):
 		self.imagePath = data['art_file']
 
-func copy() -> CardData:
+func copy() -> CardDataBase:
 	return self.get_script().new(serialize())
 
 ####################################################################################################
-
-func canFuseTo(other : CardData) -> bool:
-	return true

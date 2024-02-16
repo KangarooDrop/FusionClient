@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3cvtp0lqcvru"]
+[gd_scene load_steps=5 format=3 uid="uid://c3cvtp0lqcvru"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewBase.gd" id="1_h6x4v"]
+[ext_resource type="PackedScene" uid="uid://xe4cem7j5yoo" path="res://Scenes/UI/HighlightRect.tscn" id="2_fmlcu"]
+[ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="3_e0dra"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ys86r"]
+resource_local_to_scene = true
+shader = ExtResource("3_e0dra")
+shader_parameter/size = Vector2(40, 40)
+shader_parameter/radius = 10.0
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
 
 [node name="PreviewBase" type="Node2D"]
 script = ExtResource("1_h6x4v")
@@ -28,6 +38,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="HighlightRect" parent="SelectionRect" instance=ExtResource("2_fmlcu")]
+visible = false
+material = SubResource("ShaderMaterial_ys86r")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="NameLabel" type="Label" parent="."]
 anchors_preset = 8
@@ -60,5 +82,5 @@ grow_vertical = 2
 text = "Votes: 1/10"
 
 [connection signal="child_entered_tree" from="." to="." method="onChildAdded"]
-[connection signal="mouse_entered" from="SelectionRect" to="." method="onHoverEnter"]
-[connection signal="mouse_exited" from="SelectionRect" to="." method="onHoverExit"]
+[connection signal="mouse_entered" from="SelectionRect" to="." method="onHoverEntered"]
+[connection signal="mouse_exited" from="SelectionRect" to="." method="onHoverExited"]

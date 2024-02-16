@@ -31,6 +31,8 @@ var randomPreview = null
 
 @onready var holder : Node2D = $Holder
 
+var selected = null
+
 signal onSelect(preview : PreviewBase)
 signal onVote(preview : PreviewBase)
 
@@ -92,6 +94,8 @@ func addPreviewNode(previewNode : PreviewBase):
 	prevHolder.add_child(previewNode)
 	holderToPreview[prevHolder] = previewNode
 	timers[prevHolder] = 0.0
+	previewNode.connect("onHoverEnter", self.onPreviewHoverEnter.bind(previewNode))
+	previewNode.connect("onHoverExit", self.onPreviewHoverExit.bind(previewNode))
 	previewNode.connect("onSelected", self.onPreviewSelected.bind(previewNode))
 	if canVote:
 		previewNode.setVotes(0, 0)
@@ -139,7 +143,20 @@ func getDistScrollLeft() -> float:
 func getDistScrollRight() -> float:
 	return min((scrollWidth + lastMousePositionLocal.x - lastViewportSize.x) / scrollWidth, 1.0)
 
+func onPreviewHoverEnter(preview : PreviewBase) -> void:
+	if preview != selected:
+		preview.setColorUnselected()
+	preview.showHighlight()
+
+func onPreviewHoverExit(preview : PreviewBase) -> void:
+	if preview != selected:
+		preview.hideHighlight()
+
 func onPreviewSelected(preview : PreviewBase) -> void:
+	if is_instance_valid(selected):
+		selected.hideHighlight()
+	selected = preview
+	preview.setColorSelected()
 	if canVote:
 		emit_signal("onVote", preview)
 		if get_tree().current_scene == self:

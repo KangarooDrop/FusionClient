@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c35qtcehqr3tq"]
+
+[ext_resource type="Shader" path="res://Shaders/highlight_circ.gdshader" id="1_xyc26"]
+[ext_resource type="Script" path="res://Scripts/UI/HighlightCirc.gd" id="2_s4nqr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wsxar"]
+resource_local_to_scene = true
+shader = ExtResource("1_xyc26")
+shader_parameter/size = Vector2(40, 40)
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
+
+[node name="HighlightCirc" type="ColorRect"]
+material = SubResource("ShaderMaterial_wsxar")
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("2_s4nqr")
+
+[connection signal="resized" from="." to="." method="onResize"]

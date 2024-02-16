@@ -5,6 +5,7 @@ class_name PreviewBase
 @onready var nameLabel : Label = $NameLabel
 @onready var selectionRect : Control = $SelectionRect
 @onready var votesLabel : Label = $VotesLabel
+@onready var highlight = $SelectionRect/HighlightRect
 
 #Vars for hovering and selecting
 var canSelect : bool = true
@@ -14,6 +15,8 @@ const hoverScaleMax : float = 1.05
 var hoverTimer : float = 0.0
 const hoverTimeMax : float = 0.1
 
+signal onHoverEnter()
+signal onHoverExit()
 #Signal emitted when the node is pressed
 signal onSelected()
 
@@ -37,11 +40,25 @@ func onChildAdded(_child) -> void:
 	if is_instance_valid(selectionRect):
 		move_child(selectionRect, get_child_count() - 1)
 
-func onHoverEnter() -> void:
-	isHovering = true
+func showHighlight() -> void:
+	highlight.show()
 
-func onHoverExit() -> void:
+func hideHighlight() -> void:
+	highlight.hide()
+
+func setColorSelected() -> void:
+	highlight.setColor(Color(1.0, 1.0, 0.0, 0.4))
+
+func setColorUnselected() -> void:
+	highlight.setColor(Color(1.0, 1.0, 0.0, 0.2))
+
+func onHoverEntered() -> void:
+	isHovering = true
+	emit_signal("onHoverEnter")
+
+func onHoverExited() -> void:
 	isHovering = false
+	emit_signal("onHoverExit")
 
 func _process(delta):
 	if canSelect:

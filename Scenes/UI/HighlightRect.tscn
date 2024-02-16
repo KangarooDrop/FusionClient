@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://xe4cem7j5yoo"]
+
+[ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="1_d8vsm"]
+[ext_resource type="Script" path="res://Scripts/UI/HighlightRect.gd" id="2_wxlup"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_srxtw"]
+resource_local_to_scene = true
+shader = ExtResource("1_d8vsm")
+shader_parameter/size = Vector2(40, 40)
+shader_parameter/radius = 10.0
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
+
+[node name="HighlightRect" type="ColorRect"]
+material = SubResource("ShaderMaterial_srxtw")
+offset_right = 60.0
+offset_bottom = 60.0
+mouse_filter = 2
+script = ExtResource("2_wxlup")
+
+[connection signal="resized" from="." to="." method="onResize"]

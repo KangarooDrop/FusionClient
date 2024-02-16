@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://mrw0twfdpdtt"]
+
+[ext_resource type="PackedScene" uid="uid://dr3ksfmhbhh7i" path="res://Scenes/InGame/Territories/TerritoryNodeBase.tscn" id="1_nstxy"]
+[ext_resource type="Script" path="res://Scripts/InGame/Territories/TerritoryNodeGame.gd" id="2_aav6x"]
+[ext_resource type="PackedScene" uid="uid://c35qtcehqr3tq" path="res://Scenes/UI/HighlightCirc.tscn" id="3_pfwwd"]
+[ext_resource type="Shader" path="res://Shaders/highlight_circ.gdshader" id="4_g3hca"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s4dcu"]
+resource_local_to_scene = true
+shader = ExtResource("4_g3hca")
+shader_parameter/size = Vector2(128, 128)
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
+
+[node name="TerritoryNodeGame" instance=ExtResource("1_nstxy")]
+script = ExtResource("2_aav6x")
+
+[node name="HighlightCirc" parent="." index="0" instance=ExtResource("3_pfwwd")]
+material = SubResource("ShaderMaterial_s4dcu")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2

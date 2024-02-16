@@ -10,6 +10,9 @@ const boardPacked : PackedScene = preload("res://Game/Scenes/InGame/Boards/Board
 const territoryPacked : PackedScene = preload("res://Game/Scenes/InGame/Territories/TerritoryNode.tscn")
 """
 
+#Textures
+const chipTexture : Texture = preload("res://Art/chip.png")
+
 #Menu
 const startScreen : PackedScene = preload("res://Scenes/UI/StartScreen.tscn")
 const editorBoard : PackedScene = preload("res://Scenes/InGame/Editors/EditorBoard.tscn")
@@ -34,3 +37,6 @@ const boardNodeEditable : PackedScene = preload("res://Scenes/InGame/Boards/Boar
 #Game nodes
 const mainPacked : PackedScene = preload("res://Scenes/InGame/Main.tscn")
 const cardPacked : PackedScene = preload("res://Scenes/InGame/CardNode.tscn")
+const territoryNodeGame : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeGame.tscn")
+const boardNodeGame : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeGame.tscn")
+const chipNode : PackedScene = preload("res://Scenes/InGame/Chip.tscn")

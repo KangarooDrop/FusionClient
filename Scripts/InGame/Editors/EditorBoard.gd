@@ -102,7 +102,6 @@ var mouseCamPosition : Vector2 = Vector2()
 var waitingForHold : bool = false
 const hoverMaxTime : float = 0.5	
 var hoverTimer : float = 0.0
-const hoverMaxDist : float = TerritoryNodeBase.radius
 var hoverTerritory = null
 var hoverPosition = null
 
@@ -126,14 +125,13 @@ func _input(event):
 		if not isOnButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				if event.pressed:
-					waitingForHold = true
-					hoverTimer = 0.0
-					hoverPosition = mouseGlobalPosition
 					hoverTerritory = getOverlappingTerritory()
 					if not is_instance_valid(hoverTerritory):
 						boardNode.makeTerritory(get_global_mouse_position())
 					else:
 						lineHighlight.show()
+						waitingForHold = true
+						hoverTimer = 0.0
 				else:
 					if hoverTimer >= hoverMaxTime:
 						holdTerritory = null
@@ -194,7 +192,7 @@ func _process(delta):
 		mouseGlobalPosition += dp
 	
 	if waitingForHold:
-		if (mouseGlobalPosition - hoverPosition).length() >= hoverMaxDist:
+		if (mouseGlobalPosition - hoverTerritory.global_position).length() >= hoverTerritory.getRadiusPixels():
 			waitingForHold = false
 		else:
 			hoverTimer += delta

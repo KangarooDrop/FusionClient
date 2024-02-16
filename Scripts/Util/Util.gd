@@ -11,3 +11,7 @@ func getAllDeckData() -> Array:
 		if Validator.validateDeck(deckData):
 			decks.append(deckData)
 	return decks
+
+func _input(event):
+	if event is InputEventKey and event.keycode == KEY_F12 and event.is_pressed() and not event.is_echo():
+		Main.swapAndConnect(25565)

@@ -2,42 +2,42 @@ extends TerritoryDataBase
 
 class_name TerritoryDataGame
 
-var controller : int = -1
-var playerIdToCreatures : Dictionary = {}
-var creatureToPlayerID : Dictionary = {}
+var controller : PlayerBase = null
+var playerToCreatures : Dictionary = {}
+var creatureToPlayer : Dictionary = {}
 
-func setPlayers(playerIDs : Array) -> void:
-	controller = -1
-	playerIdToCreatures.clear()
-	creatureToPlayerID.clear()
-	for id in playerIDs:
-		playerIdToCreatures[id] = []
+func setPlayers(players : Array) -> void:
+	controller = null
+	playerToCreatures.clear()
+	creatureToPlayer.clear()
+	for player in players:
+		playerToCreatures[player] = []
 
-func isAtCapacity(playerID : int) -> bool:
-	return playerIdToCreatures[playerID].size() >= size
+func isAtCapacity(player : PlayerBase) -> bool:
+	return playerToCreatures[player].size() >= size
 
-func hasCreature(cardData : CardData) -> bool:
-	return creatureToPlayerID.has(cardData)
+func hasCreature(cardData : CardDataGame) -> bool:
+	return creatureToPlayer.has(cardData)
 
-func getFuseTargets(cardData : CardData, playerID) -> Array:
+func getFuseTargets(cardData : CardDataGame, player : PlayerBase) -> Array:
 	var rtn : Array = []
-	for id in playerIdToCreatures.keys():
-		var otherCardData : CardData = playerIdToCreatures[id]
+	for otherPlayer in playerToCreatures.keys():
+		var otherCardData : CardDataGame = playerToCreatures[otherPlayer]
 		if cardData.canFuseTo(otherCardData):
 			rtn.append(otherCardData)
 	return rtn
 
-func addCreature(playerID : int, cardData : CardData) -> bool:
-	if not isAtCapacity(playerID):
-		creatureToPlayerID[playerID].append(cardData)
-		playerIdToCreatures[cardData].append(playerID)
+func addCreature(player : PlayerBase, cardData : CardDataGame) -> bool:
+	if not isAtCapacity(player):
+		creatureToPlayer[player].append(cardData)
+		playerToCreatures[cardData].append(player)
 		return true
 	return false
 
-func removeCreature(cardData : CardData) -> bool:
+func removeCreature(cardData : CardDataGame) -> bool:
 	if hasCreature(cardData):
-		var playerID : int = creatureToPlayerID[cardData]
-		creatureToPlayerID.erase(cardData)
-		playerIdToCreatures.erase(cardData)
+		var player : PlayerBase = creatureToPlayer[cardData]
+		creatureToPlayer.erase(cardData)
+		playerToCreatures.erase(cardData)
 		return true
 	return false

@@ -16,7 +16,7 @@ func preview(deckData : Dictionary) -> void:
 	var point : Vector2 = Vector2(-dstDiff*numCards/2.0, 0.0)
 	for i in range(numCards):
 		var randCardIndex : int = getRandomCardIndex(deckData)
-		var cardData : CardData = ListOfCards.getCardByID(randCardIndex)
+		var cardData : CardDataBase = ListOfCards.getCardByID(randCardIndex)
 		var cardNode : CardNode = Preloader.cardPacked.instantiate()
 		add_child(cardNode)
 		cardNode.setCardData(cardData)

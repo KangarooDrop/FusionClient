@@ -7,7 +7,7 @@ class_name CardNode
 @onready var powerLabel : Label = $PowerLabel
 @onready var toughnessLabel : Label = $ToughnessLabel
 
-var cardData : CardData = null
+var cardData : CardDataGame = null
 
 const frameOffset : float = 112.0
 
@@ -17,7 +17,7 @@ func _init():
 func _ready():
 	pass
 
-func setCardData(cardData : CardData) -> CardNode:
+func setCardData(cardData : CardDataBase) -> CardNode:
 	self.cardData = cardData
 	
 	var texture = load(cardData.imagePath)

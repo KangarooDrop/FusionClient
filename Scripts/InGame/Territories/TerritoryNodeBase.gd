@@ -6,7 +6,13 @@ var td : TerritoryDataBase = null
 
 @onready var sprite : Sprite2D = $Sprite2D
 
-const radius : int = 32
+var radius : float = -1.0
+const baseRadius : int = 32
+func getRadiusMul() -> float:
+	return sqrt(float(td.size))
+
+func getRadiusPixels() -> float:
+	return radius
 
 func setColor(color : Color) -> void:
 	sprite.modulate = color
@@ -20,4 +26,6 @@ func setSize(size : int, updateTerritoryData : bool = true) -> void:
 	size = min(max(size, 1), TerritoryDataBase.maxSize)
 	if updateTerritoryData:
 		td.size = size
-	self.scale = Vector2.ONE * sqrt(float(size))
+	var mul : float = getRadiusMul()
+	radius = mul * baseRadius
+	self.scale = Vector2.ONE * mul
