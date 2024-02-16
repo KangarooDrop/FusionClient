@@ -2,41 +2,43 @@ extends Node
 
 """
 #IN GAME
-const mainPacked : PackedScene = preload("res://Game/Scenes/InGame/Main.tscn")
-const cardPacked : PackedScene = preload("res://Game/Scenes/InGame/CardNode.tscn")
+var mainPacked : PackedScene = load("res://Game/Scenes/InGame/Main.tscn")
+var cardPacked : PackedScene = load("res://Game/Scenes/InGame/CardNode.tscn")
 
 #IN EDITOR
-const boardPacked : PackedScene = preload("res://Game/Scenes/InGame/Boards/BoardNode.tscn")
-const territoryPacked : PackedScene = preload("res://Game/Scenes/InGame/Territories/TerritoryNode.tscn")
+var boardPacked : PackedScene = load("res://Game/Scenes/InGame/Boards/BoardNode.tscn")
+var territoryPacked : PackedScene = load("res://Game/Scenes/InGame/Territories/TerritoryNode.tscn")
 """
 
 #Textures
-const chipTexture : Texture = preload("res://Art/chip.png")
+var chipTexture : Texture = load("res://Art/chip.png")
 
 #Menu
-const startScreen : PackedScene = preload("res://Scenes/UI/StartScreen.tscn")
-const editorBoard : PackedScene = preload("res://Scenes/InGame/Editors/EditorBoard.tscn")
-const editorDeck : PackedScene = preload("res://Scenes/InGame/Editors/EditorDeck.tscn")
-const multiplayerLobby : PackedScene = preload("res://Scenes/Multiplayer/MultiplayerLobby.tscn")
-const main : PackedScene = preload("res://Scenes/InGame/Main.tscn")
+var startScreen : PackedScene = load("res://Scenes/UI/StartScreen.tscn")
+var editorBoard : PackedScene = load("res://Scenes/InGame/Editors/EditorBoard.tscn")
+var editorDeck : PackedScene = load("res://Scenes/InGame/Editors/EditorDeck.tscn")
+var multiplayerLobby : PackedScene = load("res://Scenes/Multiplayer/MultiplayerLobby.tscn")
+var main : PackedScene = load("res://Scenes/InGame/Main.tscn")
 
 #Previews
-const previewDeck : PackedScene = preload("res://Scenes/InGame/Previews/PreviewDeck.tscn")
-const previewBoard : PackedScene = preload("res://Scenes/InGame/Previews/PreviewBoard.tscn")
-const previewRandom : PackedScene = preload("res://Scenes/InGame/Previews/PreviewRandom.tscn")
-const previewNew : PackedScene = preload("res://Scenes/InGame/Previews/PreviewNew.tscn")
+var previewDeck : PackedScene = load("res://Scenes/InGame/Previews/PreviewDeck.tscn")
+var previewBoard : PackedScene = load("res://Scenes/InGame/Previews/PreviewBoard.tscn")
+var previewRandom : PackedScene = load("res://Scenes/InGame/Previews/PreviewRandom.tscn")
+var previewNew : PackedScene = load("res://Scenes/InGame/Previews/PreviewNew.tscn")
 
 #Base nodes
-const territoryNodeBase : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeBase.tscn")
-const boardNodeBase : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeBase.tscn")
+var territoryNodeBase : PackedScene = load("res://Scenes/InGame/Territories/TerritoryNodeBase.tscn")
+var boardNodeBase : PackedScene = load("res://Scenes/InGame/Boards/BoardNodeBase.tscn")
 
 #Board editor nodes
-const territoryNodeEditable : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeEditable.tscn")
-const boardNodeEditable : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeEditable.tscn")
+var territoryNodeEditable : PackedScene = load("res://Scenes/InGame/Territories/TerritoryNodeEditable.tscn")
+var boardNodeEditable : PackedScene = load("res://Scenes/InGame/Boards/BoardNodeEditable.tscn")
+var deckDisplayEntry : PackedScene = load("res://Scenes/InGame/Editors/DeckDisplayEntry.tscn")
+var cardNodeEditor : PackedScene = load("res://Scenes/InGame/CardNodeEditor.tscn")
 
 #Game nodes
-const mainPacked : PackedScene = preload("res://Scenes/InGame/Main.tscn")
-const cardPacked : PackedScene = preload("res://Scenes/InGame/CardNode.tscn")
-const territoryNodeGame : PackedScene = preload("res://Scenes/InGame/Territories/TerritoryNodeGame.tscn")
-const boardNodeGame : PackedScene = preload("res://Scenes/InGame/Boards/BoardNodeGame.tscn")
-const chipNode : PackedScene = preload("res://Scenes/InGame/Chip.tscn")
+var mainPacked : PackedScene = load("res://Scenes/InGame/Main.tscn")
+var cardPacked : PackedScene = load("res://Scenes/InGame/CardNode.tscn")
+var territoryNodeGame : PackedScene = load("res://Scenes/InGame/Territories/TerritoryNodeGame.tscn")
+var boardNodeGame : PackedScene = load("res://Scenes/InGame/Boards/BoardNodeGame.tscn")
+var chipNode : PackedScene = load("res://Scenes/InGame/Chip.tscn")

@@ -4,6 +4,7 @@ class_name SelectorBase
 
 @export var canOpenFolder : bool = false
 @export var canVote : bool = false
+@export var canUnselect : bool = false
 
 var holderToPreview : Dictionary = {}
 var timers : Dictionary = {}
@@ -43,6 +44,9 @@ func clear() -> void:
 	randomPreview = null
 	index = 0
 	scrollMin = 0.0
+
+func getAllPreviews() -> Array:
+	return holderToPreview.values()
 
 func setVotes(votes : Dictionary, totalVotes : int = -1) -> void:
 	if totalVotes == -1:
@@ -121,21 +125,22 @@ func _process(delta):
 	checkMove(delta)
 
 func checkMove(delta : float):
-	var sld : float = 0.0
-	if Input.is_action_pressed("left"):
-		sld = 1.0
-	else:
-		sld = getDistScrollLeft()
-	if sld > 0:
-		position.x = min(scrollMax, position.x + scrollSpeed * delta * sld)
-	
-	var srd : float = 0.0
-	if Input.is_action_pressed("right"):
-		srd = 1.0
-	else:
-		srd = getDistScrollRight()
-	if srd > 0:
-		position.x = max(scrollMin, position.x - scrollSpeed * delta * srd)
+	if visible:
+		var sld : float = 0.0
+		if Input.is_action_pressed("left"):
+			sld = 1.0
+		else:
+			sld = getDistScrollLeft()
+		if sld > 0:
+			position.x = min(scrollMax, position.x + scrollSpeed * delta * sld)
+		
+		var srd : float = 0.0
+		if Input.is_action_pressed("right"):
+			srd = 1.0
+		else:
+			srd = getDistScrollRight()
+		if srd > 0:
+			position.x = max(scrollMin, position.x - scrollSpeed * delta * srd)
 
 func getDistScrollLeft() -> float:
 	return min((scrollWidth - lastMousePositionLocal.x) / scrollWidth, 1.0)
@@ -153,13 +158,20 @@ func onPreviewHoverExit(preview : PreviewBase) -> void:
 		preview.hideHighlight()
 
 func onPreviewSelected(preview : PreviewBase) -> void:
-	if is_instance_valid(selected):
-		selected.hideHighlight()
-	selected = preview
-	preview.setColorSelected()
-	if canVote:
-		emit_signal("onVote", preview)
-		if get_tree().current_scene == self:
-			setVotes({holderToPreview.values().find(preview) : 1})
+	if preview == selected:
+		if canUnselect:
+			preview.setColorUnselected()
+			selected = null
+			if canVote:
+				emit_signal("onVote", null)
+			else:
+				emit_signal("onSelect", null)
 	else:
-		emit_signal("onSelect", preview)
+		if is_instance_valid(selected):
+			selected.hideHighlight()
+		selected = preview
+		preview.setColorSelected()
+		if canVote:
+			emit_signal("onVote", preview)
+		else:
+			emit_signal("onSelect", preview)

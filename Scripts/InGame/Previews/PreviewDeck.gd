@@ -10,6 +10,8 @@ var cardNodes : Array = []
 
 #Takes in parsed deck data and displays a random selection of cards
 func preview(deckData : Dictionary) -> void:
+	super.preview(deckData)
+	
 	for c in cardNodes:
 		c.queue_free()
 	

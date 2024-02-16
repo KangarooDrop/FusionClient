@@ -70,6 +70,7 @@ text = "Confirm!"
 [node name="SelectorBoard" parent="." instance=ExtResource("3_fpxvx")]
 visible = false
 canVote = true
+canUnselect = true
 
 [node name="SelectorDeck" parent="." instance=ExtResource("4_r8pxr")]
 visible = false

@@ -1,11 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxt7w1fm8uvjj"]
+[gd_scene load_steps=6 format=3 uid="uid://bxt7w1fm8uvjj"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewBoard.gd" id="1_5a75w"]
 [ext_resource type="PackedScene" uid="uid://c3cvtp0lqcvru" path="res://Scenes/InGame/Previews/PreviewBase.tscn" id="1_enly8"]
 [ext_resource type="PackedScene" uid="uid://d0wnqf8aoltje" path="res://Scenes/InGame/Boards/BoardNodeBase.tscn" id="2_bkqto"]
+[ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="3_fvj4q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ys86r"]
+resource_local_to_scene = true
+shader = ExtResource("3_fvj4q")
+shader_parameter/size = Vector2(40, 40)
+shader_parameter/radius = 10.0
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
 
 [node name="PreviewBoard" instance=ExtResource("1_enly8")]
 script = ExtResource("1_5a75w")
+
+[node name="HighlightRect" parent="SelectionRect" index="1"]
+material = SubResource("ShaderMaterial_ys86r")
 
 [node name="Center" type="Control" parent="." index="1"]
 layout_mode = 3

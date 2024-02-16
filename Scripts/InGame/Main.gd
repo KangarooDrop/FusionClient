@@ -209,8 +209,7 @@ func setBoardVotes(voteData : Dictionary, totalVotes : int = -1) -> void:
 
 func onBoardVote(preview : PreviewBase) -> void:
 	var index : int = selectorBoard.holderToPreview.values().find(preview)
-	if index != -1:
-		rpc("onPlayerBoardVote", index)
+	rpc("onPlayerBoardVote", index)
 
 var deckDataOnCheck : Array = []
 

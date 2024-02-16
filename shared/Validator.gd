@@ -29,13 +29,14 @@ static func validateDeck(deckData : Dictionary) -> int:
 	if not deckData.has('cards') :
 		return DECK_CODE.ERR_MISSING_KEY
 	
-	if typeof(deckData['cards']) != TYPE_ARRAY:
+	if typeof(deckData['cards']) != TYPE_DICTIONARY:
 		return DECK_CODE.ERR_BAD_KEYS
 	
 	for index in deckData['cards']:
-		if typeof(index) != TYPE_FLOAT:
+		if typeof(index) != TYPE_STRING or not index.is_valid_int():
 			return DECK_CODE.ERR_INVALID_CARD
-		elif index < 0 or index >= ListOfCards.cards.size():
+		var indexVal : int = int(index)
+		if indexVal < 0 or indexVal >= ListOfCards.cards.size():
 			return DECK_CODE.ERR_INVALID_CARD
 	
 	return DECK_CODE.OK

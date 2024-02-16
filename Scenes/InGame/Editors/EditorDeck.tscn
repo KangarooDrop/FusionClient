@@ -1,6 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cqji55ffn017c"]
+[gd_scene load_steps=7 format=3 uid="uid://cqji55ffn017c"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Editors/EditorDeck.gd" id="1_nudgd"]
+[ext_resource type="PackedScene" uid="uid://dmw435ejuquvw" path="res://Scenes/InGame/Previews/SelectorDeck.tscn" id="2_g6lu4"]
+[ext_resource type="PackedScene" uid="uid://btskd5qb7xq17" path="res://Scenes/InGame/Editors/DeckDisplayPanel.tscn" id="2_ibhlf"]
+[ext_resource type="PackedScene" uid="uid://xe4cem7j5yoo" path="res://Scenes/UI/HighlightRect.tscn" id="4_bdk0q"]
+[ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="5_ig7q0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2nbp8"]
+resource_local_to_scene = true
+shader = ExtResource("5_ig7q0")
+shader_parameter/size = Vector2(900, 600)
+shader_parameter/radius = 250.0
+shader_parameter/color = Color(1, 1, 1, 0.705882)
+shader_parameter/filled = true
 
 [node name="EditorDeck" type="Node2D"]
 script = ExtResource("1_nudgd")
@@ -9,15 +21,325 @@ script = ExtResource("1_nudgd")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="ExitButton" type="Button" parent="CanvasLayer"]
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardDisplay" type="Control" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -296.0
+offset_top = -220.0
+offset_right = 296.0
+offset_bottom = 284.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/CardDisplay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/CardDisplay/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="CardHolder" type="Control" parent="CanvasLayer/UI/CardDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PageButtonLeft" type="Button" parent="CanvasLayer/UI/CardDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -15.5
+offset_right = 35.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "<<"
+
+[node name="PageButtonRight" type="Button" parent="CanvasLayer/UI/CardDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -35.0
+offset_top = -15.5
+offset_right = -8.0
+offset_bottom = 15.5
+grow_horizontal = 0
+grow_vertical = 2
+text = ">>"
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer/UI/CardDisplay"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = -30.0
+offset_right = 150.0
+offset_bottom = 30.0
+grow_horizontal = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/CardDisplay/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="DeckNameLineEdit" type="LineEdit" parent="CanvasLayer/UI/CardDisplay/ColorRect2/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+placeholder_text = "Deck Name"
+alignment = 1
+
+[node name="MenuDisplay" type="Control" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 272.0
+offset_bottom = -8.0
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/MenuDisplay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/MenuDisplay/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="LoadButton" type="Button" parent="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+offset_left = 24.0
+offset_top = 16.0
+offset_right = 111.0
+offset_bottom = 48.0
+text = "New/Load"
+
+[node name="SaveButton" type="Button" parent="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -68.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 48.0
+grow_horizontal = 0
+text = "Save"
+
+[node name="ExitButton" type="Button" parent="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect"]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = -63.0
-offset_right = 69.0
-offset_bottom = -32.0
+offset_left = 24.0
+offset_top = -48.0
+offset_right = 120.0
+offset_bottom = -16.0
 grow_vertical = 0
 text = "Main Menu"
 
-[connection signal="pressed" from="CanvasLayer/ExitButton" to="." method="onExitPressed"]
+[node name="DeckDisplay" type="Control" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -272.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/DeckDisplay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/DeckDisplay/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer/UI/DeckDisplay/ColorRect/ColorRect"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -70.0
+offset_top = 8.0
+offset_right = 70.0
+offset_bottom = 56.0
+grow_horizontal = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/DeckDisplay/ColorRect/ColorRect/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.329412, 0.329412, 0.329412, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/DeckDisplay/ColorRect/ColorRect/ColorRect2/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Deck"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeckDisplayPanel" parent="CanvasLayer/UI/DeckDisplay/ColorRect" instance=ExtResource("2_ibhlf")]
+layout_mode = 1
+offset_left = 8.0
+offset_top = 80.0
+offset_right = -8.0
+offset_bottom = -8.0
+
+[node name="ColorRect3" type="ColorRect" parent="CanvasLayer/UI/DeckDisplay"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 72.0
+offset_bottom = 80.0
+grow_horizontal = 2
+color = Color(0.407843, 0.407843, 0.407843, 1)
+
+[node name="SelectorHolder" type="Control" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Blocker" type="Control" parent="CanvasLayer/UI/SelectorHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HighlightRect" parent="CanvasLayer/UI/SelectorHolder" instance=ExtResource("4_bdk0q")]
+material = SubResource("ShaderMaterial_2nbp8")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -300.0
+offset_right = 450.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Center" type="Control" parent="CanvasLayer/UI/SelectorHolder"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SelectorDeck" parent="CanvasLayer/UI/SelectorHolder/Center" instance=ExtResource("2_g6lu4")]
+canOpenFolder = true
+
+[connection signal="pressed" from="CanvasLayer/UI/CardDisplay/ColorRect/ColorRect/PageButtonLeft" to="." method="onPageLeftPressed"]
+[connection signal="pressed" from="CanvasLayer/UI/CardDisplay/ColorRect/ColorRect/PageButtonRight" to="." method="onPageRightPressed"]
+[connection signal="pressed" from="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect/LoadButton" to="." method="showDecks"]
+[connection signal="pressed" from="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect/SaveButton" to="." method="saveDeck"]
+[connection signal="pressed" from="CanvasLayer/UI/MenuDisplay/ColorRect/ColorRect/ExitButton" to="." method="onExitPressed"]
+[connection signal="onSelect" from="CanvasLayer/UI/SelectorHolder/Center/SelectorDeck" to="." method="onDeckPreveiewSelected"]

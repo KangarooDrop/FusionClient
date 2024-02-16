@@ -8,7 +8,7 @@ func getAllDeckData() -> Array:
 	for fn in FileIO.getAllFiles(FileIO.DECK_PATH):
 		var path : String = FileIO.DECK_PATH + fn
 		var deckData : Dictionary = FileIO.readJson(path)
-		if Validator.validateDeck(deckData):
+		if Validator.validateDeck(deckData) == Validator.DECK_CODE.OK:
 			decks.append(deckData)
 	return decks
 

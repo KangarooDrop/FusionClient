@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bncdbowyffhdv"
-path="res://.godot/imported/Necro2.png-888334ea27196ef57a1b50b323bfe29a.ctex"
+uid="uid://dy8ioub1oxwab"
+path="res://.godot/imported/Necro3.png-dd35d450a5734e3f5c0b7e3aadd81eec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Cards/Necro/Necro2.png"
-dest_files=["res://.godot/imported/Necro2.png-888334ea27196ef57a1b50b323bfe29a.ctex"]
+source_file="res://Art/Cards/Death/Necro3.png"
+dest_files=["res://.godot/imported/Necro3.png-dd35d450a5734e3f5c0b7e3aadd81eec.ctex"]
 
 [params]
 

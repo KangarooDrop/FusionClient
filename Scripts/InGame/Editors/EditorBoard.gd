@@ -32,7 +32,7 @@ var loadFolder : String = ProjectSettings.globalize_path("user://boards/")
 @onready var loadDialog : FileDialog = $CanvasLayer/UI/FileDialogHolder/LoadDialog
 @onready var exitDialog : ConfirmationDialog = $CanvasLayer/UI/FileDialogHolder/ExitDialog
 @onready var messageDialog : AcceptDialog = $CanvasLayer/UI/FileDialogHolder/MessageDialog
-@onready var nameEdit : LineEdit = $CanvasLayer/UI/Menu/Holder/Left/NameEdit
+@onready var nameEdit : LineEdit = $CanvasLayer/UI/MenuTop/NameEdit
 
 func _ready():
 	saveDialog.current_path = saveFolder

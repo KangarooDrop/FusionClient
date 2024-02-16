@@ -15,6 +15,9 @@ const hoverScaleMax : float = 1.05
 var hoverTimer : float = 0.0
 const hoverTimeMax : float = 0.1
 
+#_Unused: For extentions of this class
+var data
+
 signal onHoverEnter()
 signal onHoverExit()
 #Signal emitted when the node is pressed
@@ -25,6 +28,9 @@ func setName(text : String) -> void:
 
 func getName() -> String:
 	return self.nameLabel.get_text()
+
+func getData():
+	return data
 
 func showVotes() -> void:
 	votesLabel.show()
@@ -79,8 +85,7 @@ func _input(event):
 	if canSelect and isHovering:
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed() and not event.is_echo():
 			emit_signal("onSelected")
-			print("Preview pressed: ", getName())
 
 #Function to be overloaded to set preview data
-func preview(_data : Dictionary) -> void:
-	pass
+func preview(data) -> void:
+	self.data = data

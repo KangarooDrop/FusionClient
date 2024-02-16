@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5l5hbkvjwy86"]
+
+[ext_resource type="PackedScene" uid="uid://y4rwmovigq80" path="res://Scenes/InGame/CardNode.tscn" id="1_y0f80"]
+[ext_resource type="Script" path="res://Scripts/InGame/CardNodeEditor.gd" id="2_y6brc"]
+
+[node name="CardNodeEditor" instance=ExtResource("1_y0f80")]
+script = ExtResource("2_y6brc")

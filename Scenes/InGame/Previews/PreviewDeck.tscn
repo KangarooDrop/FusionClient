@@ -1,7 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://vjjr01tfptav"]
+[gd_scene load_steps=5 format=3 uid="uid://vjjr01tfptav"]
 
 [ext_resource type="PackedScene" uid="uid://c3cvtp0lqcvru" path="res://Scenes/InGame/Previews/PreviewBase.tscn" id="1_3gf6b"]
 [ext_resource type="Script" path="res://Scripts/InGame/Previews/PreviewDeck.gd" id="2_t27cn"]
+[ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="3_0uxgx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ys86r"]
+resource_local_to_scene = true
+shader = ExtResource("3_0uxgx")
+shader_parameter/size = Vector2(40, 40)
+shader_parameter/radius = 10.0
+shader_parameter/color = Color(1, 1, 0, 0.4)
+shader_parameter/filled = false
 
 [node name="PreviewDeck" instance=ExtResource("1_3gf6b")]
 script = ExtResource("2_t27cn")
+
+[node name="HighlightRect" parent="SelectionRect" index="1"]
+material = SubResource("ShaderMaterial_ys86r")
