@@ -71,14 +71,7 @@ func flip() -> void:
 
 ####################################################################################################
 
-const WAIT_TIME : float = 3.0
-var timer : float = 0.0
 func _process(delta):
-	timer += delta
-	if timer >= WAIT_TIME:
-		flip()
-		timer = 0.0
-	
 	if flipCount > 0:
 		var lastRoll : float = self.roll
 		setRoll(roll + delta*PI*2.0/FLIP_TIME)
@@ -112,7 +105,7 @@ func _process(delta):
 		trans2 = trans2.rotated(rotCamera)
 		trans2 = trans2.rotated(-cam.rotation)
 		trans2 = trans2.scaled(Vector2(1.0, cam.pitch))
-		trans2 = trans2.translated(Vector2.UP*hOffset*height + Vector2.UP.rotated(roll) * i*height*lerp(1.0, 0.0, cam.pitch))
+		trans2 = trans2.translated(Vector2.UP*hOffset*height + Vector2.UP.rotated(roll) * (i-(spriteNodes.size()-1)/2.0)*height*lerp(1.0, 0.0, cam.pitch))
 		trans2 = trans2.rotated(cam.rotation)
 		sprite.transform = trans2
 

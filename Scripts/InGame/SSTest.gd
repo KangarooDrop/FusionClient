@@ -8,14 +8,33 @@ extends Node2D
 func _ready():
 	stack0.setTextures(SpriteStack.getTestTextures())
 	stack0.hOffset = 10
+	
 	var ts1 : Array = []
 	ts1.append(load("res://Art/Cards/_TEST/back.png"))
 	ts1.append(load("res://Art/Cards/_TEST/art.png"))
 	ts1.append(load("res://Art/Cards/_TEST/frame.png"))
 	stack1.setTextures(ts1)
-	stack2.setTextures(ts1)
+	
+	stack2.height = 2
+	var ts2 : Array = []
+	ts2.append(load("res://Art/Cards/_TEST/back.png"))
+	ts2.append(load("res://Art/Cards/_TEST/art.png"))
+	ts2.append(load("res://Art/Cards/_TEST/frame_edge.png"))
+	ts2.append(load("res://Art/Cards/_TEST/frame_edge.png"))
+	ts2.append(load("res://Art/Cards/_TEST/frame.png"))
+	stack2.setTextures(ts2)
+
+const WAIT_TIME : float = 3.0
+var timer : float = 0.0
 
 func _process(delta):
+	timer += delta
+	if timer >= WAIT_TIME:
+		stack0.flip()
+		stack1.flip()
+		stack2.flip()
+		timer = 0.0
+	
 	var mov : Vector2 = Vector2()
 	if Input.is_action_pressed("up"):
 		mov.y -= 1
@@ -51,10 +70,8 @@ func _input(event):
 	elif event is InputEventMouseMotion:
 		if rotatingCam:
 			cam.rotation += event.relative.x * dpToRot
-			cam.pitch = max(0.2, min(1.0, cam.pitch+event.relative.y * dpToFlip))
+			cam.pitch = max(0.5, min(1.0, cam.pitch+event.relative.y * dpToFlip))
 		if movingCam:
 			var dp : Vector2 = event.relative/cam.zoom
-			#dp = dp.rotated(cam.rotation)
 			dp.y = dp.y/cam.pitch
-			#dp = dp.rotated(-cam.rotation)
 			cam.position -= dp.rotated(cam.rotation)
