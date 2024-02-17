@@ -1,5 +1,12 @@
 extends Node
 
+var cam : Camera2D
+func getCam() -> Camera2D:
+	return cam
+
+func _process(delta):
+	cam = get_viewport().get_camera_2d()
+
 func getTimeAbsolute() -> int:
 	return Time.get_unix_time_from_datetime_dict(Time.get_datetime_dict_from_system())
 

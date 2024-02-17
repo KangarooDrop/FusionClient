@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://br42cu746k3f0"]
+
+[ext_resource type="PackedScene" uid="uid://20di4xiui44" path="res://Scenes/InGame/SpriteStack.tscn" id="1_7r6wq"]
+[ext_resource type="Script" path="res://Scripts/InGame/SSTest.gd" id="1_t7vnm"]
+[ext_resource type="Texture2D" uid="uid://dvawu36rep6rx" path="res://Art/Cards/Backs/Back1.png" id="2_q8lo0"]
+[ext_resource type="Script" path="res://Scripts/InGame/CamStack.gd" id="3_mhltt"]
+
+[node name="SsTest" type="Node2D"]
+script = ExtResource("1_t7vnm")
+
+[node name="SpriteStack" parent="." instance=ExtResource("1_7r6wq")]
+
+[node name="SpriteStack2" parent="." instance=ExtResource("1_7r6wq")]
+position = Vector2(75, 0)
+
+[node name="SpriteStack3" parent="." instance=ExtResource("1_7r6wq")]
+position = Vector2(300, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+ignore_rotation = false
+zoom = Vector2(4, 4)
+script = ExtResource("3_mhltt")
+
+[node name="Back1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(75, 6)
+texture = ExtResource("2_q8lo0")
