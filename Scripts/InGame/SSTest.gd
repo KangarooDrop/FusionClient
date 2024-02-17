@@ -8,7 +8,9 @@ extends Node2D
 func _ready():
 	stack0.setTextures(SpriteStack.getTestTextures())
 	stack0.hOffset = 10
+	stack0.rollAxis = 0.5
 	
+	stack1.height = 0
 	var ts1 : Array = []
 	ts1.append(load("res://Art/Cards/_TEST/back.png"))
 	ts1.append(load("res://Art/Cards/_TEST/art.png"))

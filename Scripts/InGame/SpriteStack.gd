@@ -36,6 +36,8 @@ var roll : float = 0.0
 var wasHidden : bool = false
 #Whether the card is flipping over or not
 var flipCount : int = 0
+#Roll Axis : (0.0=about the bottom, 0.5=about the center, 1.0=about the top)
+var rollAxis : int = 0.5
 
 var spriteNodes : Array = []
 
@@ -105,7 +107,8 @@ func _process(delta):
 		trans2 = trans2.rotated(rotCamera)
 		trans2 = trans2.rotated(-cam.rotation)
 		trans2 = trans2.scaled(Vector2(1.0, cam.pitch))
-		trans2 = trans2.translated(Vector2.UP*hOffset*height + Vector2.UP.rotated(roll) * (i-(spriteNodes.size()-1)/2.0)*height*lerp(1.0, 0.0, cam.pitch))
+		var dAxis : float = -(spriteNodes.size()-1) * rollAxis
+		trans2 = trans2.translated(Vector2.UP*hOffset*height + Vector2.UP.rotated(roll) * (i+dAxis)*height*lerp(1.0, 0.0, cam.pitch))
 		trans2 = trans2.rotated(cam.rotation)
 		sprite.transform = trans2
 
