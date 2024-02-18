@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://jdsw6cn1nblq"]
+
+[ext_resource type="PackedScene" uid="uid://20di4xiui44" path="res://Scenes/InGame/SpriteStack.tscn" id="1_ur0aq"]
+[ext_resource type="Script" path="res://Scripts/InGame/ChipStack.gd" id="2_jm4u5"]
+
+[node name="ChipStack" instance=ExtResource("1_ur0aq")]
+script = ExtResource("2_jm4u5")

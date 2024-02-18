@@ -3,21 +3,26 @@ extends Node2D
 @onready var stack0 : SpriteStack = $SpriteStack
 @onready var stack1 : SpriteStack = $SpriteStack2
 @onready var stack2 : SpriteStack = $SpriteStack3
+
+@onready var cardNode : CardNodeStack = $HandHolder/CardNodeStack
+
+@onready var chip : ChipStack = $ChipStack
+
 @onready var cam : CamStack = $Camera2D
 
 func _ready():
 	stack0.setTextures(SpriteStack.getTestTextures())
-	stack0.hOffset = 10
+	stack0.height = 10
 	stack0.rollAxis = 0.5
 	
-	stack1.height = 0
+	stack1.offset = 0
 	var ts1 : Array = []
 	ts1.append(load("res://Art/Cards/_TEST/back.png"))
 	ts1.append(load("res://Art/Cards/_TEST/art.png"))
 	ts1.append(load("res://Art/Cards/_TEST/frame.png"))
 	stack1.setTextures(ts1)
 	
-	stack2.height = 2
+	stack2.offset = 2
 	var ts2 : Array = []
 	ts2.append(load("res://Art/Cards/_TEST/back.png"))
 	ts2.append(load("res://Art/Cards/_TEST/art.png"))
@@ -25,6 +30,7 @@ func _ready():
 	ts2.append(load("res://Art/Cards/_TEST/frame_edge.png"))
 	ts2.append(load("res://Art/Cards/_TEST/frame.png"))
 	stack2.setTextures(ts2)
+	stack2.flatness = 1.0
 
 const WAIT_TIME : float = 3.0
 var timer : float = 0.0
@@ -32,9 +38,13 @@ var timer : float = 0.0
 func _process(delta):
 	timer += delta
 	if timer >= WAIT_TIME:
-		stack0.flip()
-		stack1.flip()
-		stack2.flip()
+		#stack0.flip()
+		#stack1.flip()
+		#stack2.flip()
+		#stack2.flip()
+		
+		#cardNode.flip()
+		
 		timer = 0.0
 	
 	var mov : Vector2 = Vector2()
