@@ -15,11 +15,13 @@ func _ready():
 	stack0.height = 10
 	stack0.rollAxis = 0.5
 	
-	stack1.offset = 0
+	var pixPerLevel : float = 8.0
 	var ts1 : Array = []
-	ts1.append(load("res://Art/Cards/_TEST/back.png"))
-	ts1.append(load("res://Art/Cards/_TEST/art.png"))
-	ts1.append(load("res://Art/Cards/_TEST/frame.png"))
+	var carTexture : Texture = load("res://Art/Cards/_TEST/ss_car.png")
+	for i in range(11):
+		for j in range(round(pixPerLevel)):
+			ts1.append(SpriteStack.makeAtlas(carTexture, Rect2(15.0*i, 0.0, 15.0, 32.0)))
+	stack1.offset = 2.0/pixPerLevel
 	stack1.setTextures(ts1)
 	
 	stack2.offset = 2
@@ -30,22 +32,13 @@ func _ready():
 	ts2.append(load("res://Art/Cards/_TEST/frame_edge.png"))
 	ts2.append(load("res://Art/Cards/_TEST/frame.png"))
 	stack2.setTextures(ts2)
-	stack2.flatness = 1.0
+	stack2.lockPosition.x = 300.0
 
 const WAIT_TIME : float = 3.0
 var timer : float = 0.0
 
 func _process(delta):
 	timer += delta
-	if timer >= WAIT_TIME:
-		#stack0.flip()
-		#stack1.flip()
-		#stack2.flip()
-		#stack2.flip()
-		
-		#cardNode.flip()
-		
-		timer = 0.0
 	
 	var mov : Vector2 = Vector2()
 	if Input.is_action_pressed("up"):

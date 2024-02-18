@@ -23,12 +23,7 @@ static func makeAtlas(texture : Texture, rect : Rect2) -> AtlasTexture:
 var height : float = 0.0 : set=setHeight
 func setHeight(val : float):
 	height = val
-	if self.roll > PI/2.0 and self.roll < 3.0*PI/2.0:
-			for i in range(spriteNodes.size()):
-				spriteNodes[i].z_index = height-i
-	else:
-			for i in range(spriteNodes.size()):
-				spriteNodes[i].z_index = height+i
+	setZIndices()
 #Distance between sprites
 var offset : float = 4.0
 #Rotation relative to the camera
@@ -47,7 +42,12 @@ var clickSize : Vector2 = Vector2()
 var mouseHovering : bool = false
 var isPressing : bool = false
 #Used to counteract the effects of height and camera rotation (e.g. in hand)
-var flatness : float = 0.0
+var lockMul : float = 0.0 : set=setLockMul
+func setLockMul(newLockMul : float):
+	lockMul = newLockMul
+	setZIndices()
+var lockPosition : Vector2 = Vector2()
+var lockingDir : int = 0
 
 var spriteNodes : Array = []
 
@@ -67,16 +67,16 @@ func setRoll(roll : float) -> void:
 	roll = fmod(roll + 2.0*PI, 2.0*PI)
 	
 	self.roll = roll
+	setZIndices()
+
+func setZIndices() -> void:
+	var zf : int = getFlatnessZ()
 	if self.roll > PI/2.0 and self.roll < 3.0*PI/2.0:
-		if not wasHidden:
-			wasHidden = true
-			for i in range(spriteNodes.size()):
-				spriteNodes[i].z_index = height-i
+		for i in range(spriteNodes.size()):
+			spriteNodes[i].z_index = height-i + zf
 	else:
-		if wasHidden:
-			wasHidden = false
-			for i in range(spriteNodes.size()):
-				spriteNodes[i].z_index = height+i
+		for i in range(spriteNodes.size()):
+			spriteNodes[i].z_index = height+i + zf
 
 func flip() -> void:
 	flipCount += 1
@@ -94,7 +94,20 @@ func _process(delta):
 			flipCount -= 1
 			setRoll(PI)
 	
+	if lockingDir != 0:
+		setLockMul(lockMul + delta*lockingDir*5.0)
+		if lockingDir > 0 and lockMul >= 1.0:
+			lockMul = 1.0
+			lockingDir = 0
+		elif lockingDir < 0 and lockMul <= 0.0:
+			lockMul = 0.0
+			lockingDir = 0
+	
 	var cam : CamStack = Util.getCam()
+	var invLockMul : float = 1.0-lockMul
+	
+	rotCamera = fmod(cam.rotation, 2*PI)*lockMul
+	scale = lerp(Vector2.ONE, Vector2(1.0/cam.zoom.x, 1.0/cam.zoom.y), lockMul)
 	
 	#Scaling the displacement from the camera by the pitch
 	#     X
@@ -102,12 +115,19 @@ func _process(delta):
 	#     X       =>>        X
 	#
 	#
-	var d : float = (global_position - cam.global_position).dot(Vector2.UP.rotated(cam.rotation))
+	var d : float = invLockMul*(global_position - cam.global_position).dot(Vector2.UP.rotated(cam.rotation))
 	var trans : Transform2D = Transform2D()
 	trans = trans.rotated(-cam.rotation)
 	trans = trans.translated(Vector2(0, d*(1.0-cam.pitch)))
 	trans = trans.rotated(cam.rotation)
+	
+	#trans = trans.rotated(-cam.rotation*lockMul)
+	var dp : Vector2 = lockPosition.rotated(cam.rotation)
+	trans = trans.translated((cam.global_position-global_position)*lockMul*cam.zoom+dp*lockMul)
+	#trans = trans.rotated(cam.rotation*lockMul)
+	#print(cam.position)
 	spriteHolder.transform = trans
+	
 	
 	for i in spriteNodes.size():
 		var sprite : Sprite2D = spriteNodes[i]
@@ -116,16 +136,16 @@ func _process(delta):
 		trans2 = trans2.scaled(Vector2(flipMul, 1.0))
 		trans2 = trans2.rotated(rotCamera)
 		trans2 = trans2.rotated(-cam.rotation)
-		trans2 = trans2.scaled(Vector2(1.0, cam.pitch))
+		trans2 = trans2.scaled(Vector2(1.0, lerp(cam.pitch, 1.0, lockMul)))
 		var dAxis : float = -(spriteNodes.size()-1) * rollAxis
-		trans2 = trans2.translated(Vector2.UP*height*(1.0-cam.pitch) + Vector2.UP.rotated(roll) * (i+dAxis)*offset*(1.0-cam.pitch))
+		trans2 = trans2.translated(invLockMul*(Vector2.UP*height*(1.0-cam.pitch) + Vector2.UP.rotated(roll) * (i+dAxis)*offset*(1.0-cam.pitch)))
 		trans2 = trans2.rotated(cam.rotation)
 		sprite.transform = trans2
 		
 	var trans3 : Transform2D = Transform2D()
-	trans3 = trans3.rotated(-cam.rotation)
-	trans3 = trans3.scaled(Vector2(1.0, 1.0/cam.pitch))
-	trans3 = trans3.rotated(cam.rotation)
+	trans3 = trans3.rotated(-cam.rotation+rotCamera)
+	trans3 = trans3.scaled(Vector2(1.0, lerp(1.0/cam.pitch, 1.0, lockMul)) * lerp(Vector2.ONE, cam.zoom, lockMul))
+	trans3 = trans3.rotated(cam.rotation+rotCamera)
 	var mousePosTrans : Vector2 = trans3*(get_global_mouse_position()-spriteNodes[0].global_position)
 	mouseHovering = abs(mousePosTrans.x) < clickSize.x/2.0 and abs(mousePosTrans.y) < clickSize.y/2.0
 	
@@ -139,7 +159,6 @@ func setTextures(textures : Array) -> void:
 	for i in range(textures.size()):
 		var tex : Texture = textures[i]
 		var sprite : Sprite2D = Sprite2D.new()
-		sprite.z_index = height+i
 		spriteHolder.add_child(sprite)
 		spriteNodes.append(sprite)
 		sprite.texture = tex
@@ -150,6 +169,16 @@ func setTextures(textures : Array) -> void:
 		if size.y > colSize.y:
 			colSize.y = size.y
 	clickSize = colSize
+	setZIndices()
+
+func getFlatnessZ() -> int:
+	return int(100*lockMul)
+
+func swapLock() -> void:
+	if lockingDir == 0:
+		lockingDir = 1 if lockMul < 0.5 else -1
+	else:
+		lockingDir = -lockingDir 
 
 func _input(event):
 	if event is InputEventMouseButton and not event.is_echo() and mouseHovering:
@@ -158,12 +187,15 @@ func _input(event):
 		else:
 			onButtonUp(event.button_index)
 
-func onButtonUp(buttonIndex : int) -> void:
+func onButtonDown(buttonIndex : int) -> void:
 	isPressing = true
 
-func onButtonDown(buttonIndex : int) -> void:
+func onButtonUp(buttonIndex : int) -> void:
 	if isPressing:
 		onClick(buttonIndex)
 
 func onClick(buttonIndex : int) -> void:
-	pass
+	if buttonIndex == MOUSE_BUTTON_LEFT:
+		flip()
+	elif buttonIndex == MOUSE_BUTTON_RIGHT:
+		swapLock()

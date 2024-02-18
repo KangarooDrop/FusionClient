@@ -29,6 +29,7 @@ func _ready():
 
 func _process(delta):
 	super._process(delta)
+	
 	if height > 0:
 		flipCount = 1
 		velocity.z -= 500 * delta
@@ -46,6 +47,7 @@ func _process(delta):
 	position.y += velocity.y * delta
 
 func onClick(buttonIndex) -> void:
+	super.onClick(buttonIndex)
 	if buttonIndex == MOUSE_BUTTON_LEFT:
 		velocity.z = 380
 		height += 1
