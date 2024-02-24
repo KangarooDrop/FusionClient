@@ -19,6 +19,7 @@ var selfPlayer : PlayerBase
 var allPlayers : Array = []
 var otherPlayers : Array = []
 var idToPlayer : Dictionary = {}
+var playerToNode : Dictionary = {}
 
 ####################################################################################################
 
@@ -29,9 +30,7 @@ var idToPlayer : Dictionary = {}
 @onready var boardHolder : Node2D = $BoardHolder
 @onready var boardNode : BoardNodeGame = $BoardHolder/BoardNodeGame
 
-@onready var handHolder : Node2D = $HandHolder
-@onready var graveHolder : Node2D = $GraveHolder
-@onready var deckHolder : Node2D = $DeckHolder
+@onready var playerNodeHolder : Node2D = $BoardHolder/PlayerNodeHolder
 
 @onready var confirmButton : Button = $CanvasLayer/ConfirmButton
 
@@ -171,6 +170,14 @@ func playerAdded(isSelf : bool, playerID : int, color : Color, username : String
 		otherPlayers.append(playerData)
 	idToPlayer[playerID] = playerData
 	allPlayers.append(playerData)
+	
+	var playerNode : PlayerNode = Preloader.playerNode.instantiate()
+	playerNodeHolder.add_child(playerNode)
+	playerToNode[playerData] = playerNode
+	playerNode.position = Vector2.DOWN.rotated(PI/2.0 * idToPlayer.size()) * 600.0
+	playerNode.rotation = playerNode.position.angle() - PI/2.0
+	playerNode.setPlayer(playerData)
+	
 	print(str(playerData) + " connected")
 
 @rpc("authority", "call_remote", "reliable")
@@ -247,6 +254,9 @@ func gameStarted() -> void:
 func setBoardData(data : Dictionary) -> void:
 	boardNode.loadSaveData(data)
 	boardNode.setPlayers(allPlayers)
+	for territory in boardNode.getAllTerritories():
+		for slot in territory.getAllSlots():
+			slot.connect("slot_pressed", onSlotPressed.bind(slot))
 
 @rpc("authority", "call_remote", "reliable")
 func onSetOpponentElements(playerID : int, elements : Array):
@@ -254,6 +264,8 @@ func onSetOpponentElements(playerID : int, elements : Array):
 	print(str(player) + " " + str(elements))
 
 ####################################################################################################
+
+var commandQueue : Array = []
 
 var betHovering = null
 var betSelected = null
@@ -285,6 +297,8 @@ func processInGame():
 					pass
 			
 			betHovering = newBetHovering
+	
+	processCommandQueue()
 
 ### BET PHASE ###
 @rpc("authority", "call_remote", "reliable")
@@ -395,6 +409,121 @@ func _input(event):
 					betSelected = territoryNode
 					betSelected.setColor(selfPlayer.color)
 
+@rpc("authority", "call_remote", "reliable")
+func receiveCommand(command) -> void:
+	commandQueue.append(command)
+
+#make [territory 0 0 0]
+func processCommandQueue():
+	while commandQueue.size() > 0:
+		var command : Array = commandQueue.pop_front()
+		if command[0] == "make":
+			var loc : Array = command[1]
+			if loc[0] == "territory":
+				var terr : TerritoryNodeGame = boardNode.findTerritory(loc[1])
+				var player : PlayerBase = allPlayers[loc[2]]
+				var slotIndex : int = loc[3]
+				terr.td.setCreature(CardDataGame.new({}), player, slotIndex)
+				print("Setting creature at ", str(terr), " ", str(player), " ", str(slotIndex))
+			elif loc[0] == "hand":
+				var cardData : CardDataGame = CardDataGame.new(ListOfCards.getCardByID(0).serialize())
+				var player : PlayerBase = allPlayers[loc[1]]
+				var cardNode : CardNode = playerToNode[player].addToHandData(cardData)
+				if player == selfPlayer:
+					cardNode.setRoll(0.0)
+				cardNode.connect("card_pressed", self.onCardPressed.bind(cardNode))
+				print("Setting creature at hand")
+		print(command)
+
+var pressedCardNode : CardNode = null
+
+func onCardPressed(buttonIndex : int, cardNode : CardNode):
+	if buttonIndex == MOUSE_BUTTON_LEFT:
+		if pressedCardNode == cardNode:
+			pressedCardNode = null
+		else:
+			pressedCardNode = cardNode
+
+func onSlotPressed(buttonIndex : int, creatureSlot : CreatureSlot) -> void:
+	if buttonIndex == MOUSE_BUTTON_LEFT:
+		if pressedCardNode != null and creatureSlot.cardNode == null:
+			if pressedCardNode.cardData.zone == CardDataGame.ZONES.HAND:
+				for player in playerToNode.keys():
+					var playerNode : PlayerNode = playerToNode[player]
+					if playerNode.isInHandNode(pressedCardNode):
+						playerNode.removeFromHandNode(pressedCardNode)
+						creatureSlot.setCardNode(pressedCardNode)
+						return
+			elif pressedCardNode.cardData.zone == CardDataGame.ZONES.TERRITORY:
+				var oldSlot : CreatureSlot = boardNode.getCardNodeToSlot(pressedCardNode)
+				if oldSlot != null:
+					oldSlot.transferCardNode(creatureSlot)
+					pressedCardNode = null
+					
+		
+	elif buttonIndex == MOUSE_BUTTON_RIGHT:
+		print("SLOT LOC: " + str(boardNode.slotToLoc(creatureSlot)))
+	
+
+#make - makes a card - /make LOC {data} - /make [board 0 1 0] {}
+#	 -> Creates a dummy(hidden) card for player=0 at territory1's slot0
+
+#move - moves a card - /move LOC NEW_LOC - /move [board 1 0 0] [board 1 2 0]
+#	 -> Moves player=1 's creature from territory0's slot0 to territory2's slot0
+
+#set - sets card data - /set LOC {data} - /set [hand 0 1] {"name":...}
+#	 -> Sets the data of player=0 's hand[1] to the given data
+
+#flip - flips a card - /flip LOC {data} - /flip [hand 1 4] {"name":...}
+#	 -> Calls set() function and flip() function
+
+#bet - puts chip on territory - /bet player_id territory_id slot - /bet 0 3
+#	 -> Creates a chip for player=0 at territory3
+
+#fuse - sets a card to be fused - /fuse SOURCE_LOC TARGET_LOC - /fuse [hand 0 4] [board 1 0 1]
+#	 -> Fuses player=0 's hand[4] card onto player=1 's creature at territory0's slot1
+
+#Card Locator [ZONE, OWNER, INDEX] : 
+#	ZONE = hand,grave,deck, etc. 
+#	OWNER = player_id
+#	INDEX = card index in hand, grave, ..., slot number of territory
+
+#"move [territory 0 1 0] [territory 0 1 1]" -> ["move", ["territory", 0, 1, 0], ["territory"], 0, 1, 1]]
+static func parseStringToCommand(commandString : String) -> Array:
+	print("A ", commandString)
+	var arrayCount : int = 0
+	var currentLine : String = ""
+	var commandData : Array = []
+	for i in range(commandString.length()):
+		var char : String = commandString[i]
+		if char == " " and arrayCount == 0:
+			if currentLine != " " and currentLine != "":
+				commandData.append(parseStringDataToCommand(currentLine))
+			currentLine = ""
+		elif char == "[":
+			arrayCount += 1
+			if arrayCount > 1:
+				currentLine += "["
+		elif char == "]":
+			arrayCount -= 1
+			if arrayCount == 0:
+				commandData.append(parseStringToCommand(currentLine))
+				currentLine = ""
+			else:
+				currentLine += "]"
+		else:
+			currentLine += char
+	if currentLine != "":
+		commandData.append(parseStringDataToCommand(currentLine))
+	return commandData
+
+static func parseStringDataToCommand(stringData : String):
+	if stringData.is_valid_int():
+		return int(stringData)
+	elif stringData.is_valid_float():
+		return float(stringData)
+	else:
+		return stringData
 
 
 

@@ -30,5 +30,3 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BoardNode" parent="Center" index="0" instance=ExtResource("2_bkqto")]
-
-[node name="Camera2D" type="Camera2D" parent="." index="3"]

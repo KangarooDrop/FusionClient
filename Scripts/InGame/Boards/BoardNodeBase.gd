@@ -132,6 +132,9 @@ func moveTerritory(terr : TerritoryNodeBase, pos : Vector2) -> void:
 	var td : TerritoryDataBase = nodeToTerritoryData[terr]
 	bd.moveTerritory(td, pos)
 
+func findTerritory(territoryIndex : int) -> TerritoryNodeGame:
+	return territoryDataToNode[bd.territories[territoryIndex]]
+
 ####################################################################################################
 
 func isConnected(terr0 : TerritoryNodeBase, terr1 : TerritoryNodeBase) -> bool:

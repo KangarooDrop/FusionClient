@@ -1,14 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckutom7bvbjj0"]
+[gd_scene load_steps=7 format=3 uid="uid://ckutom7bvbjj0"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Main.gd" id="1_0cbnh"]
+[ext_resource type="PackedScene" uid="uid://ca6jchott1o7y" path="res://Scenes/UI/Console.tscn" id="2_hwvhs"]
 [ext_resource type="PackedScene" uid="uid://dfm1w1lo5vyns" path="res://Scenes/InGame/Previews/SelectorBoard.tscn" id="3_fpxvx"]
+[ext_resource type="Script" path="res://Scripts/InGame/CamController.gd" id="3_xdeaf"]
 [ext_resource type="PackedScene" uid="uid://dmw435ejuquvw" path="res://Scenes/InGame/Previews/SelectorDeck.tscn" id="4_r8pxr"]
 [ext_resource type="PackedScene" uid="uid://crjyaynppeu14" path="res://Scenes/InGame/Boards/BoardNodeGame.tscn" id="4_xhrs7"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0cbnh")
 
+[node name="Console" parent="." instance=ExtResource("2_hwvhs")]
+
 [node name="Camera2D" type="Camera2D" parent="."]
+ignore_rotation = false
+script = ExtResource("3_xdeaf")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -54,16 +60,13 @@ grow_vertical = 0
 text = "Quit"
 
 [node name="ConfirmButton" type="Button" parent="CanvasLayer"]
-anchors_preset = 7
-anchor_left = 0.5
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -4.0
-offset_top = -40.0
-offset_right = 4.0
+offset_left = 32.0
+offset_top = -63.0
+offset_right = 107.0
 offset_bottom = -32.0
-grow_horizontal = 2
 grow_vertical = 0
 text = "Confirm!"
 
@@ -79,13 +82,7 @@ visible = false
 
 [node name="BoardNodeGame" parent="BoardHolder" instance=ExtResource("4_xhrs7")]
 
-[node name="HandHolder" type="Node2D" parent="BoardHolder"]
-
-[node name="HandHolder" type="Node2D" parent="."]
-
-[node name="GraveHolder" type="Node2D" parent="."]
-
-[node name="DeckHolder" type="Node2D" parent="."]
+[node name="PlayerNodeHolder" type="Node2D" parent="BoardHolder"]
 
 [connection signal="pressed" from="CanvasLayer/ConcedeButton" to="." method="onConcedePressed"]
 [connection signal="pressed" from="CanvasLayer/QuitButton" to="." method="onQuitPressed"]

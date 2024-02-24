@@ -1,6 +1,7 @@
 
 class_name CardDataBase
 
+enum ZONES {NONE, DECK, HAND, GRAVEYARD, TERRITORY, QUEUE, FUSED}
 enum PHASE {START, DRAW, BET, ACTION, REVEAL, INVADE, END}
 
 ####################################################################################################
@@ -13,7 +14,7 @@ var toughness : int = -1
 var abilities : Array = []
 
 enum ELEMENT {NULL = 0, FIRE = 1, WATER = 2, ROCK = 3, NATURE = 4, DEATH = 5, TECH = 6}
-var elements : Array = []
+var elements : Array = [ELEMENT.NULL]
 
 var imagePath : String = ""
 

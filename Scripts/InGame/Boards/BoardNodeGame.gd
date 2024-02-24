@@ -17,6 +17,23 @@ func getTerritoryPacked() -> PackedScene:
 
 ####################################################################################################
 
+func getCardNodeToSlot(cardNode : CardNode) -> CreatureSlot:
+	for territory in getAllTerritories():
+		for slot in territory.getAllSlots():
+			if slot.cardNode == cardNode:
+				return slot
+	return null
+
+func slotToLoc(creatureSlot : CreatureSlot) -> Array:
+	var territories : Array = getAllTerritories()
+	for i in range(territories.size()):
+		for j in range(players.size()):
+			var slots : Array = territories[i].playerToSlots[players[j]]
+			for k in slots.size():
+				if slots[k] == creatureSlot:
+					return ["territory", i, j, k]
+	return []
+
 func setPlayers(players : Array) -> void:
 	self.players = players
 	for terr in getAllTerritories():
@@ -31,6 +48,7 @@ func makeBetChip(player : PlayerBase, index : int) -> void:
 	var chip : ChipNode = Preloader.chipNode.instantiate()
 	chipHolder.add_child(chip)
 	chip.position = pos
+	chip.modulate = player.color
 
 func clearBetChips() -> void:
 	for c in chipHolder.get_children():

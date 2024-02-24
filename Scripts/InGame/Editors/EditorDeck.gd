@@ -8,6 +8,9 @@ extends Node
 @onready var pageButtonRight : Button = $CanvasLayer/UI/CardDisplay/ColorRect/ColorRect/PageButtonRight
 @onready var deckNameLineEdit : LineEdit = $CanvasLayer/UI/CardDisplay/ColorRect2/ColorRect/DeckNameLineEdit
 
+@onready var cam : Camera2D = $Camera2D
+@onready var cardExpander : CardExpander = $CardExpander
+
 var previewToDeckData : Dictionary = {}
 
 var cardNodes : Array = []
@@ -17,6 +20,8 @@ const cardsPerPage : int = cardsPerRow*cardsPerColumn
 const cardDist : Vector2 = Vector2(128.0, 144.0)
 
 func _ready():
+	cardExpander.cam = cam
+	
 	var off : Vector2 = -Vector2((cardsPerRow-1)/2.0 * cardDist.x, (cardsPerColumn-1)/2.0 * cardDist.x)
 	for x in range(cardsPerRow):
 		cardNodes.append([])
@@ -26,17 +31,22 @@ func _ready():
 			cardHolder.add_child(cardNode)
 			cardNode.position = pos
 			cardNodes[x].append(cardNode)
+			cardNodes[x][y].setRoll(PI)
 			cardNode.connect("card_pressed", onCardPressed.bind(cardNode))
 	showCardPage()
 
 var lastCardIndex : int = 0
 func onPageLeftPressed() -> void:
+	var prevIndex : int = lastCardIndex
 	lastCardIndex = max(0, lastCardIndex - cardsPerPage)
-	showCardPage()
+	if prevIndex != lastCardIndex:
+		showCardPage()
 func onPageRightPressed() -> void:
+	var prevIndex : int = lastCardIndex
 	var ind : int = ListOfCards.cards.size()/cardsPerPage
 	lastCardIndex = (ind) * cardsPerPage
-	showCardPage()
+	if prevIndex != lastCardIndex:
+		showCardPage()
 func showCardPage() -> void:
 	var pageCont : Array = []
 	for i in range(lastCardIndex, lastCardIndex + cardsPerPage):
@@ -47,19 +57,29 @@ func showCardPage() -> void:
 	pageButtonLeft.visible = lastCardIndex > 0
 	pageButtonRight.visible = lastCardIndex + cardsPerPage < ListOfCards.cards.size()
 
+var cardNodeToExpand : CardNode = null
 func onCardPressed(buttonIndex : int, cardNode) -> void:
-	if buttonIndex == MOUSE_BUTTON_LEFT:
-		deckDisplay.addCardData(cardNode.cardData)
+	if cardExpander.expandedCardNode == null:
+		if buttonIndex == MOUSE_BUTTON_LEFT:
+			deckDisplay.addCardData(cardNode.cardData)
+		elif buttonIndex == MOUSE_BUTTON_RIGHT:
+			cardNodeToExpand = cardNode
 
 func setCardData(cards : Array) -> void:
+	for y in range(cardsPerColumn):
+		for x in range(cardsPerRow):
+			if cardNodes[x][y].revealed:
+				cardNodes[x][y].flipToBack()
+	await get_tree().create_timer(CardNode.FLIP_TIME).timeout
+	
 	var index : int = 0
 	for y in range(cardsPerColumn):
 		for x in range(cardsPerRow):
 			if index >= cards.size():
-				cardNodes[x][y].hide()
+				pass
 			else:
-				cardNodes[x][y].show()
 				cardNodes[x][y].setCardData(cards[index])
+				cardNodes[x][y].flipToFront()
 			index += 1
 
 func showDecks() -> void:
@@ -116,3 +136,8 @@ func _input(event):
 			onPageLeftPressed()
 		elif event.keycode == KEY_RIGHT:
 			onPageRightPressed()
+	elif event is InputEventMouseButton and event.is_pressed() and not event.is_echo():
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			cardExpander.setExpanded(cardNodeToExpand)
+			cardNodeToExpand = null
+			

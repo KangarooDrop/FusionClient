@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://ca6jchott1o7y"]
+
+[ext_resource type="Script" path="res://Scripts/Util/Console.gd" id="1_6jtvc"]
+
+[node name="Console" type="CanvasLayer"]
+layer = 2
+visible = false
+script = ExtResource("1_6jtvc")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -47.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -63.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Control/ScrollContainer"]
+custom_minimum_size = Vector2(1120, 569)
+layout_mode = 2
+text = "
+"
+vertical_alignment = 2
+
+[connection signal="text_submitted" from="Control/LineEdit" to="." method="onEnter"]

@@ -1,28 +1,70 @@
-[gd_scene load_steps=4 format=3 uid="uid://y4rwmovigq80"]
+[gd_scene load_steps=5 format=3 uid="uid://y4rwmovigq80"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/CardNode.gd" id="1_0wxu8"]
 [ext_resource type="Texture2D" uid="uid://li80qerukexd" path="res://Art/Cards/CardArtPage.png" id="2_1lg0j"]
+[ext_resource type="Texture2D" uid="uid://dvawu36rep6rx" path="res://Art/Cards/Backs/Back1.png" id="2_4ehto"]
 [ext_resource type="Texture2D" uid="uid://3cwv03qjsfb2" path="res://Art/Cards/Frames/frames.png" id="2_5i4hu"]
 
 [node name="CardNode" type="Node2D"]
 script = ExtResource("1_0wxu8")
 
-[node name="ArtSprite" type="Sprite2D" parent="."]
+[node name="Holder" type="Node2D" parent="."]
+
+[node name="Back" type="Node2D" parent="Holder"]
+
+[node name="BackArt" type="Sprite2D" parent="Holder/Back"]
+texture = ExtResource("2_4ehto")
+
+[node name="Front" type="Node2D" parent="Holder"]
+
+[node name="RulesHolder" type="Control" parent="Holder/Front"]
+layout_mode = 3
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 50.0
+offset_top = -67.0
+offset_right = 50.0
+offset_bottom = 69.0
+grow_vertical = 2
+size_flags_horizontal = 0
+
+[node name="ColorRect" type="ColorRect" parent="Holder/Front/RulesHolder"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.219608, 0.219608, 0.219608, 1)
+
+[node name="Label" type="Label" parent="Holder/Front/RulesHolder"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -99.0
+offset_bottom = 136.0
+grow_horizontal = 0
+text = "  Poppin"
+
+[node name="ArtSprite" type="Sprite2D" parent="Holder/Front"]
 texture = ExtResource("2_1lg0j")
 
-[node name="FrameSprite" type="Sprite2D" parent="."]
+[node name="FrameSprite" type="Sprite2D" parent="Holder/Front"]
 texture = ExtResource("2_5i4hu")
 region_enabled = true
 region_rect = Rect2(0, 0, 112, 144)
 
-[node name="PowerLabel" type="Label" parent="."]
+[node name="PowerLabel" type="Label" parent="Holder/Front"]
 offset_left = -40.0
 offset_top = 40.0
 offset_bottom = 63.0
 text = "1"
 vertical_alignment = 1
 
-[node name="ToughnessLabel" type="Label" parent="."]
+[node name="ToughnessLabel" type="Label" parent="Holder/Front"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -34,7 +76,7 @@ text = "1"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Hover" type="Control" parent="."]
+[node name="Hover" type="Control" parent="Holder"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -50.0
@@ -42,5 +84,5 @@ offset_top = -69.0
 offset_right = 50.0
 offset_bottom = 69.0
 
-[connection signal="mouse_entered" from="Hover" to="." method="onMouseEnter"]
-[connection signal="mouse_exited" from="Hover" to="." method="onMouseExit"]
+[connection signal="mouse_entered" from="Holder/Hover" to="." method="onMouseEnter"]
+[connection signal="mouse_exited" from="Holder/Hover" to="." method="onMouseExit"]

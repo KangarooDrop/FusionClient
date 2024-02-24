@@ -1,5 +1,7 @@
 extends Node
 
+const CARD_SIZE : Vector2 = Vector2(112.0, 144.0)
+
 var cam : Camera2D
 func getCam() -> Camera2D:
 	return cam
@@ -19,6 +21,17 @@ func getAllDeckData() -> Array:
 			decks.append(deckData)
 	return decks
 
+func getPerp(dir : Vector2) -> Vector2:
+	return Vector2(-dir.y, dir.x)
+
+func makeCardNode() -> CardNode:
+	var cardNode = Preloader.cardPacked.instantiate()
+	cardNode.z_index = 1
+	return cardNode
+
 func _input(event):
-	if event is InputEventKey and event.keycode == KEY_F12 and event.is_pressed() and not event.is_echo():
-		Main.swapAndConnect(25565)
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.keycode == KEY_F11:
+			print(Main.parseStringToCommand("move [territory 0 1 [0 4]] [territory 0 1 1]"))
+		elif event.keycode == KEY_F12:
+			Main.swapAndConnect(25565)

@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlfvct4ioyoo7"]
+[gd_scene load_steps=3 format=3 uid="uid://dlfvct4ioyoo7"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Chip.gd" id="1_83rc8"]
+[ext_resource type="Texture2D" uid="uid://biu17phv4khmn" path="res://Art/chip.png" id="2_qqg1k"]
 
 [node name="Chip" type="Node2D"]
 script = ExtResource("1_83rc8")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_qqg1k")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
 
 [node name="Camera2D" type="Camera2D" parent="."]

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://0ddm5xkfbk12"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/PlayerNode.gd" id="1_jqrdk"]
+
+[node name="PlayerNode" type="Node2D"]
+script = ExtResource("1_jqrdk")
+
+[node name="DeckHolder" type="Node2D" parent="."]
+position = Vector2(-200, 144)
+
+[node name="GraveHolder" type="Node2D" parent="."]
+position = Vector2(200, 144)
+
+[node name="HandHolder" type="Node2D" parent="."]

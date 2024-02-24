@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqji55ffn017c"]
+[gd_scene load_steps=8 format=3 uid="uid://cqji55ffn017c"]
 
 [ext_resource type="Script" path="res://Scripts/InGame/Editors/EditorDeck.gd" id="1_nudgd"]
 [ext_resource type="PackedScene" uid="uid://dmw435ejuquvw" path="res://Scenes/InGame/Previews/SelectorDeck.tscn" id="2_g6lu4"]
 [ext_resource type="PackedScene" uid="uid://btskd5qb7xq17" path="res://Scenes/InGame/Editors/DeckDisplayPanel.tscn" id="2_ibhlf"]
+[ext_resource type="Script" path="res://Scripts/InGame/CardExpander.gd" id="2_rshel"]
 [ext_resource type="PackedScene" uid="uid://xe4cem7j5yoo" path="res://Scenes/UI/HighlightRect.tscn" id="4_bdk0q"]
 [ext_resource type="Shader" path="res://Shaders/highlight_rect.gdshader" id="5_ig7q0"]
 
@@ -16,6 +17,9 @@ shader_parameter/filled = true
 
 [node name="EditorDeck" type="Node2D"]
 script = ExtResource("1_nudgd")
+
+[node name="CardExpander" type="Node2D" parent="."]
+script = ExtResource("2_rshel")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 

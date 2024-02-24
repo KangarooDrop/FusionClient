@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqx50kprfpoxg"]
+
+[ext_resource type="Script" path="res://Scripts/InGame/Territories/CreatureSlot.gd" id="1_svmeh"]
+[ext_resource type="Texture2D" uid="uid://5wdpkutgawti" path="res://Art/Cards/CardSlot.png" id="2_q1xaj"]
+
+[node name="CreatureSlot" type="Node2D"]
+script = ExtResource("1_svmeh")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -56.0
+offset_top = -72.0
+offset_right = 56.0
+offset_bottom = 72.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.498039)
+
+[node name="Node2D" type="Node2D" parent="ColorRect"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_q1xaj")
+
+[connection signal="mouse_entered" from="ColorRect" to="." method="onMouseEnter"]
+[connection signal="mouse_exited" from="ColorRect" to="." method="onMouseExit"]

@@ -25,6 +25,7 @@ func preview(deckData : Dictionary) -> void:
 		cardNodes.append(cardNode)
 		cardNode.position = Vector2(dstDiff*(numCards-1)/2.0 - dstDiff * i, 0.0)
 		cardNode.rotation = rotDiff * (numCards-1)/2.0 - rotDiff * i
+		cardNode.setRoll(0.0)
 	
 	nameLabel.set_text(deckData["name"])
 	move_child(selectionRect, get_child_count() - 1)
